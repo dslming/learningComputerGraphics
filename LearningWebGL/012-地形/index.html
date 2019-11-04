@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<title>Perlin noise</title>
+<style>
+  body,
+  html,
+  canvas,
+  .centerbox {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .centerbox {
+    height: 70%;
+  }
+
+  .renderInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+  }
+
+</style>
+
+<div class='centerbox'>
+  <canvas class="canvas"></canvas>
+</div>
+
+<div class="renderInfo"></div>
+
+<script src='./perlin.js'></script>
+<script>
+  function initCanvas() {
+    let canvas = document.querySelector('.canvas')
+    canvas.width = 50;
+    canvas.height = 50;
+    let ctx = canvas.getContext('2d');
+    return { ctx, canvas }
+  }
+
+  function generateImg2d(ctx, canvas) {
+    let image = ctx.createImageData(canvas.width, canvas.height);
+    let data = image.data;
+    for (let x = 0; x < canvas.width; x++) {
+      for (let y = 0; y < canvas.height; y++) {
+        let value = Math.abs(noise.perlin2(x / 100, y / 100));
+        value *= 256;
+        // 根据坐标(x, y), 计算像素位置在一纬数组data的位置
+        let cell = (x + y * canvas.width) * 4;
+        data[cell] = value
+        data[cell + 1] = 0
+        data[cell + 2] = 0;
+        // data[cell] += Math.max(0, (25 - value) * 8);
+        data[cell + 3] = 255; // alpha.
+      }
+    }
+    // console.error(data);
+    return image
+  }
+
+  function run2d() {
+    let state = document.querySelector(".renderInfo")
+    let { ctx, canvas } = initCanvas()
+    let start = Date.now();
+    let img = generateImg2d(ctx, canvas)
+    let end = Date.now();
+    ctx.putImageData(img, 0, 0);
+    state.innerHTML = `Rendered in ${(end - start)} ms.`
+  }
+
+  function generateImg3d(ctx, canvas, image, heightInfo) {
+    var start = Date.now();
+    let data = image.data;
+    // Cache width and height values for the canvas.
+    var cWidth = canvas.width;
+    var cHeight = canvas.height;
+
+    var max = -Infinity, min = Infinity;
+    for (var x = 0; x < cWidth; x++) {
+      for (var y = 0; y < cHeight; y++) {
+        var value = Math.abs(noise.perlin3(x / 100, y / 100, heightInfo.height));
+        value *= 256;
+
+        var cell = (x + y * cWidth) * 4;
+        data[cell] = data[cell + 1] = data[cell + 2] = value;
+        data[cell] += Math.max(0, (25 - value) * 8);
+        data[cell + 3] = 255; // alpha.
+      }
+    }
+
+    var end = Date.now();
+
+    ctx.fillColor = 'black';
+    ctx.fillRect(0, 0, 100, 100);
+    ctx.putImageData(image, 0, 0);
+    heightInfo.height += 0.05;
+  }
+
+  function run3d() {
+    let heightInfo = {
+      height: 0
+    }
+    let state = document.querySelector(".renderInfo")
+    let { ctx, canvas } = initCanvas()
+    let image = ctx.createImageData(canvas.width, canvas.height);
+
+    let start = Date.now();
+    function loop() {
+      generateImg3d(ctx, canvas, image, heightInfo)
+      requestAnimationFrame(loop)
+    }
+    requestAnimationFrame(loop)
+  }
+
+  run2d()
+</script>

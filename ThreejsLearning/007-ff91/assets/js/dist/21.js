@@ -1,0 +1,1 @@
+module.exports = 'precision mediump float;\n\nuniform vec3 color;\nuniform sampler2D texture;\n\nvarying float opacity;\nvarying float diagonal;\n\nvoid main() {\n\t\tvec2 coords = vec2(abs(step(0.5, diagonal) - gl_PointCoord.x), gl_PointCoord.y);\n\t\tgl_FragColor = vec4(color, opacity) * texture2D(texture, coords);\n}';

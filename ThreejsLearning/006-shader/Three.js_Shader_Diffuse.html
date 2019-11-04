@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <script src='../lib/three(105).js'></script>
+        <script src='../lib/OrbitControls.js'></script>
+    </head>
+
+    <body>
+        <p>Three.js shader 模拟漫反射</p>
+        <style>
+            #Wrapper {
+                width: 500px;
+                height: 500px;
+            }
+
+        </style>
+        <div id="Wrapper"></div>
+        <script id="vertexShader" type="x-shader/x-vertex">
+        varying vec4 fColor;
+        // 光的颜色
+        uniform vec4 diffuseProduct;
+        // 光的方向
+        uniform vec4 lightPosition;
+
+        void main()
+        {
+            vec3 pos = (modelViewMatrix * vec4(position, 1.0)).xyz;
+            vec3 light = lightPosition.xyz;
+            vec3 L = normalize(lightPosition.xyz);
+            vec3 N = normalize( normalMatrix* normal.xyz);
+            float Kd = max( dot(L, N), 0.0 );
+
+            vec4 diffuse = Kd*diffuseProduct;
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            fColor = diffuse;
+        }
+    </script>
+
+        <script id="fragShader" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 fColor;
+        void main()
+        {
+            gl_FragColor = fColor;
+        }
+    </script>
+
+        <script>
+            /** Set up Three.js **/
+            // First we initialize the scene and our camera
+            const scene = new THREE.Scene();
+            window.scene = scene
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+            scene.add(camera);
+            let container = document.querySelector('#Wrapper')
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(500, 500);
+            container.appendChild(renderer.domElement);
+
+            const uniforms = {
+                // 光的颜色
+                diffuseProduct: {
+                    type: 'v4',
+                    value: new THREE.Vector4(1.0, 0, 0, 1.0)
+                },
+                // 光的方向
+                lightPosition: {
+                    type: 'v4',
+                    value: new THREE.Vector4(1.0, 1.0, 1.0, 1.0)
+                }
+            };
+
+            /** Set up the scene **/
+            const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const cubeMaterial = new THREE.ShaderMaterial({
+                vertexShader: document.getElementById('vertexShader').innerHTML,
+                fragmentShader: document.getElementById('fragShader').innerHTML,
+                uniforms
+            });
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            scene.add(cube);
+            cube.position.z = -2; // Shift the cube back so we can see it
+
+            let control = new THREE.OrbitControls(camera, container)
+            control.autoRotate = false
+            control.enabled = true
+            camera.position.copy(new THREE.Vector3(1.24, 0.8, 1))
+            camera.rotation.set(0, 0.35, 0)
+            /** Start animating **/
+            const render = () => {
+                uniforms.lightPosition.value = new THREE.Vector4(1.0, 0.0, 0.0, 1.0)
+                cube.rotation.y += 0.01;
+                requestAnimationFrame(render);
+                renderer.render(scene, camera);
+            };
+
+            render();
+
+            // Listen for resize event to update resolution uniforms.
+            window.onresize = function (event) {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                uniforms.resolution.value.x = window.innerWidth;
+                uniforms.resolution.value.y = window.innerHeight;
+            }
+        </script>
+    </body>
+
+</html>

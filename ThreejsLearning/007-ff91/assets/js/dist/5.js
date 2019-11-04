@@ -1,0 +1,1 @@
+module.exports = 'precision highp float;\nvarying float brightness;\n\nvoid main() {\n\t// gl_FragColor = vec4(0.627, 0.443, 0.341, brightness); // Copper\n\tgl_FragColor = vec4(0.29, 0.82, 0.95, brightness);\t// Blue\n}';

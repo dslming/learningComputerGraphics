@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src='../lib/three(105).js'></script>
+    <script src="../lib/CSS3DRenderer.js"></script>
+    <script src='../lib/OrbitControls.js'></script>
+    <script src='../lib/TweenMax.js'></script>
+</head>
+
+<body>
+    <p>CSS3DObject的使用例子,一个空间中的卡片</p>
+    <style>
+        .test {
+            width: 200px;
+            height: 240px;
+            background-color: aqua;
+            font-size: 12px;
+            line-height: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        
+        .hite {
+            display: none;
+        }
+        
+        .close {
+            cursor: pointer;
+            width: 25px;
+            height: 25px;
+            background-color: gray;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: #fff;
+            position: absolute;
+            right: 5%;
+        }
+        
+        #cssWrapper,
+        #webglWrapper {
+            position: absolute;
+        }
+        
+        #webglWrapper {
+            z-index: -1;
+        }
+    </style>
+
+    <div id="content-dimensions" class="test">
+        <div class="close">
+            X
+        </div>
+        <div>test</div>
+        <p class="copy">FF 91's 126-inch long wheelbase and extended platform is a new benchmark in comfort and refinement. The welcome absence of a gas powertrain allowed us to create a unique interior architecture that maximizes space and luxury.</p>
+    </div>
+
+    <div id="cssWrapper"></div>
+    <div id="webglWrapper"></div>
+
+    <script>
+        let that = null
+        class Game {
+            constructor(containerWebGL, containerCSS) {
+                that = this
+                this.rendererWebGL = new THREE.WebGLRenderer();
+                this.containerWebGL = containerWebGL;
+                this.containerWebGL.appendChild(this.rendererWebGL.domElement);
+                this.rendererWebGL.setSize(window.innerWidth, window.innerWidth);
+                this.rendererCSS = new THREE.CSS3DRenderer();
+                this.containerCSS = containerCSS;
+                this.containerCSS.append(this.rendererCSS.domElement);
+                this.rendererCSS.setSize(window.innerWidth, window.innerWidth);
+
+
+
+                // scene
+                this.sceneCSS = new THREE.Scene()
+                window.scene = this.sceneCSS
+
+                // 模型加载
+                let dom = document.querySelector('.test')
+                dom.setAttribute("style", "");
+                let a = new THREE.CSS3DObject(dom);
+                a.position.set(0, 0, -200)
+                this.sceneCSS.add(a);
+
+                // 用户相机
+                this.cameraUser = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerWidth, 1, 5000);
+                this.cameraUser.name = 'cameraUser'
+                this.cameraUser.position.set(0, 0, 450)
+                this.cameraUser.lookAt(0, 0, 0)
+                this.sceneCSS.add(this.cameraUser);
+
+                // 纹理
+                var loader = new THREE.CubeTextureLoader();
+                loader.setPath('./img/');
+                var textureCube = loader.load([
+                    'xn.jpg', 'xp.jpg',
+                    'yn.jpg', 'yp.jpg',
+                    'zn.jpg', 'zp.jpg'
+                ]);
+                // 材质
+                var shader = THREE.ShaderLib["cube"];
+                shader.uniforms["tCube"].value = textureCube;
+                var material = new THREE.ShaderMaterial({
+                        fragmentShader: shader.fragmentShader,
+                        vertexShader: shader.vertexShader,
+                        uniforms: shader.uniforms,
+                        depthWrite: false,
+                        side: THREE.BackSide
+                    })
+                    // 几何体
+                var cubeGeometry = new THREE.BoxBufferGeometry(10, 10, 10);
+                // 网格
+                var box = new THREE.Mesh(cubeGeometry, material);
+                box.onBeforeRender = function(renderer, scene, camera) {
+                    this.matrixWorld.copyPosition(camera.matrixWorld);
+                };
+                box.name = 'box'
+                this.sceneCSS.add(box);
+
+                this.initControl()
+                    // 运行
+                this.run()
+            }
+
+            initControl() {
+                this.control = new THREE.OrbitControls(this.cameraUser, this.containerCSS)
+                this.control.autoRotate = false
+                this.control.enabled = true
+            }
+
+            run() {
+                that.rendererCSS.render(that.sceneCSS, that.cameraUser);
+                that.rendererWebGL.render(that.sceneCSS, that.cameraUser);
+                requestAnimationFrame(that.run)
+            }
+        }
+    </script>
+
+    <script>
+        let eleWebgl = document.querySelector('#webglWrapper')
+        let eleCss = document.querySelector('#cssWrapper')
+        let close = document.querySelector('.close')
+        let card = document.querySelector('.test')
+        close.onclick = () => {
+            card.classList.add('hite')
+        }
+        let game = new Game(eleWebgl, eleCss)
+    </script>
+</body>
+
+</html>

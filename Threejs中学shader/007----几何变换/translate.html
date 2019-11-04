@@ -1,0 +1,131 @@
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: green;
+  }
+
+  #container {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    background-color: #fff;
+  }
+
+</style>
+<script src="../three.min.js"></script>
+<script id="vertexShader" type="x-shader/x-vertex">
+    void main() {
+        gl_Position = vec4( position, 1.0 );
+    }
+</script>
+<script id="fragmentShader" type="x-shader/x-fragment">
+#define PI 3.14159265359
+uniform vec2 u_resolution;
+uniform float u_time;
+
+mat2 scale(vec2 scale){
+    return mat2(scale.x,0.0,
+                0.0,scale.y);
+}
+
+float box(in vec2 st, in vec2 size){
+    size = vec2(0.5) - size*0.5;
+    vec2 uv = smoothstep(size,
+                        size+vec2(0.001),
+                        st);
+    uv *= smoothstep(size,
+                    size+vec2(0.001),
+                    vec2(1.0)-st);
+    return uv.x*uv.y;
+}
+
+float cross(in vec2 st, float size){
+    return  box(st, vec2(size,size/4.)) +
+            box(st, vec2(size/4.,size));
+}
+
+void main(){
+  vec2 st = gl_FragCoord.xy/u_resolution.xy;
+  vec3 color = vec3(0.0);
+
+  st -= vec2(0.5);
+  st = scale( vec2(sin(u_time)+1.0) ) * st;
+  st += vec2(0.5);
+
+  // Show the coordinates of the space on the background
+  // color = vec3(st.x,st.y,0.0);
+
+  // Add the shape on the foreground
+  color += vec3(cross(st,0.2));
+
+  gl_FragColor = vec4(color,1.0);
+}
+</script>
+<div id="container"></div>
+
+<script>
+  let container;
+  let camera, scene, renderer;
+  let uniforms;
+
+  function init() {
+    container = document.getElementById('container');
+    camera = new THREE.Camera();
+    camera.position.z = 1;
+    scene = new THREE.Scene();
+    var geometry = new THREE.PlaneBufferGeometry(2, 2);
+    uniforms = {
+      u_time: { type: "f", value: 1.0 },
+      u_resolution: { type: "v2", value: new THREE.Vector2() },
+      u_mouse: { type: "v2", value: new THREE.Vector2() }
+    };
+
+    var material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: document.getElementById('vertexShader').textContent,
+      fragmentShader: document.getElementById('fragmentShader').textContent
+    });
+
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    container.appendChild(renderer.domElement);
+
+    onWindowResize();
+    window.addEventListener('resize', onWindowResize, false);
+
+    document.onmousemove = function (e) {
+      uniforms.u_mouse.value.x = e.pageX
+      uniforms.u_mouse.value.y = e.pageY
+    }
+  }
+
+  function onWindowResize(event) {
+    container = document.getElementById('container');
+    let w = container.clientWidth
+    let h = container.clientHeight
+    renderer.setSize(w, h);
+    uniforms.u_resolution.value.x = renderer.domElement.width;
+    uniforms.u_resolution.value.y = renderer.domElement.height;
+    // console.error(uniforms.u_resolution)
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    render();
+  }
+
+  function render() {
+    uniforms.u_time.value += 0.05;
+    renderer.render(scene, camera);
+  }
+
+
+
+  init();
+  animate();
+</script>

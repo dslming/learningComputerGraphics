@@ -1,0 +1,106 @@
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: green;
+  }
+
+  #container {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    background-color: #fff;
+  }
+
+</style>
+<script src="../three.min.js"></script>
+<script id="vertexShader" type="x-shader/x-vertex">
+    void main() {
+        gl_Position = vec4( position, 1.0 );
+    }
+</script>
+<script id="fragmentShader" type="x-shader/x-fragment">
+    uniform vec2 u_resolution;
+    uniform float u_time;
+
+    float box(in vec2 st, in vec2 size){
+      // size = vec2(0.5) - size*.5;
+      vec2 bl = step(size, st);
+      vec2 tr = step(size, vec2(1.) - st);
+      return bl.x * bl.y * tr.x * tr.y;
+    }
+
+    void main(){
+      vec2 st = gl_FragCoord.xy/u_resolution.xy;
+      float rect = box(st, vec2(.1));
+      vec3 color = vec3(rect);
+      gl_FragColor = vec4(color, 1.);
+    }
+</script>
+<div id="container"></div>
+
+<script>
+  let container;
+  let camera, scene, renderer;
+  let uniforms;
+
+  function init() {
+    container = document.getElementById('container');
+    camera = new THREE.Camera();
+    camera.position.z = 1;
+    scene = new THREE.Scene();
+    var geometry = new THREE.PlaneBufferGeometry(2, 2);
+    uniforms = {
+      u_time: { type: "f", value: 1.0 },
+      u_resolution: { type: "v2", value: new THREE.Vector2() },
+      u_mouse: { type: "v2", value: new THREE.Vector2() }
+    };
+
+    var material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: document.getElementById('vertexShader').textContent,
+      fragmentShader: document.getElementById('fragmentShader').textContent
+    });
+
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    container.appendChild(renderer.domElement);
+
+    onWindowResize();
+    window.addEventListener('resize', onWindowResize, false);
+
+    document.onmousemove = function (e) {
+      uniforms.u_mouse.value.x = e.pageX
+      uniforms.u_mouse.value.y = e.pageY
+    }
+  }
+
+  function onWindowResize(event) {
+    container = document.getElementById('container');
+    let w = container.clientWidth
+    let h = container.clientHeight
+    renderer.setSize(w, h);
+    uniforms.u_resolution.value.x = renderer.domElement.width;
+    uniforms.u_resolution.value.y = renderer.domElement.height;
+    // console.error(uniforms.u_resolution)
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    render();
+  }
+
+  function render() {
+    uniforms.u_time.value += 0.05;
+    renderer.render(scene, camera);
+  }
+
+
+
+  init();
+  animate();
+</script>

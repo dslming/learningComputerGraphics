@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src='../lib/three(105).js'></script>
+    <script src='../lib/OrbitControls.js'></script>
+</head>
+<body>
+    <p>纹理贴图</p>
+    <style>
+        #Wrapper {
+            width: 500px;
+            height: 500px;
+        }
+    </style>
+    <div id="Wrapper"></div>
+
+    <script>
+        // 场景
+        const scene = new THREE.Scene();
+        window.scene = scene
+
+        // 相机
+        const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        camera.name = 'camera'
+        scene.add(camera);
+
+        // 渲染
+        let container = document.querySelector('#Wrapper')
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(500, 500 );
+        container.appendChild( renderer.domElement );
+
+        // 光
+        var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+        directionalLight.name = 'directionalLight'
+        scene.add( directionalLight );
+
+        // 纹理
+        var loader = new THREE.CubeTextureLoader();
+        loader.setPath( './img/' );
+        var textureCube = loader.load( [
+            'xn.jpg', 'xp.jpg',
+            'yn.jpg', 'yp.jpg',
+            'zn.jpg', 'zp.jpg'
+        ] );
+
+        // 材质
+        var shader = THREE.ShaderLib["cube"];
+        shader.uniforms["tCube"].value = textureCube;
+        var material = new THREE.ShaderMaterial( {	
+            fragmentShader: shader.fragmentShader,
+            vertexShader: shader.vertexShader,
+            uniforms: shader.uniforms,
+            depthWrite: false,
+            side: THREE.BackSide		
+        })
+
+        // 几何体
+        var cubeGeometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
+
+        // 网格
+        var box = new THREE.Mesh(cubeGeometry, material);
+        box.onBeforeRender = function (renderer, scene, camera) {
+            this.matrixWorld.copyPosition(camera.matrixWorld);
+        };
+        box.name = 'box'
+        scene.add(box);
+
+        // 相机控制
+        let control = new THREE.OrbitControls(camera, container)
+        control.autoRotate = true
+        control.enabled = true
+        camera.position.copy(new THREE.Vector3(1.24, 0.8, 0))
+     
+
+
+        /** Start animating **/
+        const render = () => {
+            requestAnimationFrame( render );
+            renderer.render( scene, camera );
+        };
+
+        render();
+
+        // Listen for resize event to update resolution uniforms.
+        window.onresize = function(event){
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    </script>
+</body>
+</html>

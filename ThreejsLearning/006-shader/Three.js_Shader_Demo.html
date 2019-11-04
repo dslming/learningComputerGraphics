@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <script src='../lib/three(105).js'></script>
+    </head>
+
+    <body>
+        <p>three.js 使用shader显示图片</p>
+        <script id="fragShader" type="shader-code">
+            uniform vec2 resolution;
+            uniform float time;
+            uniform sampler2D texture;
+            void main() {
+                vec2 pos = gl_FragCoord.xy / resolution.xy;
+                vec4 tex = texture2D(texture, pos);
+                float r = abs(sin(time / 1200.)) * tex.r;
+                float g = pos.x * tex.g;
+                float b = pos.y * tex.b;
+                float a = 1.;
+                gl_FragColor = vec4(r, g, b, a);
+            }
+      </script>
+
+        <script>
+            /** Set up Three.js **/
+            // First we initialize the scene and our camera
+            const scene = new THREE.Scene();
+            window.scene = scene
+            const camera = new THREE.PerspectiveCamera(75, 500 / 500, 0.1, 1000);
+
+            // We create the WebGL renderer and add it to the document
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(500, 500);
+            document.body.appendChild(renderer.domElement);
+
+            /** Configure our shader **/
+            // Prepare the texture
+            THREE.ImageUtils.crossOrigin = ''; // Allows us to load an external image
+            const tex = THREE.ImageUtils.loadTexture('./200w_s.gif');
+
+            // Get the shader code
+            const fragmentShader = document.getElementById('fragShader').innerHTML;
+
+            // Configure the uniforms
+            const startTime = Date.now();
+            const uniforms = {
+                resolution: {
+                    type: 'v2',
+                    value: new THREE.Vector2(500, 500),
+                },
+                time: {
+                    type: 'f',
+                    value: 0.,
+                },
+                texture: {
+                    type: 't',
+                    value: tex,
+                },
+            };
+
+            /** Set up the scene **/
+            const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const cubeMaterial = new THREE.ShaderMaterial({ fragmentShader, uniforms });
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            scene.add(cube);
+            cube.position.z = -1.25; // Shift the cube back so we can see it
+
+            /** Start animating **/
+            const render = () => {
+                // Update time uniform.
+                uniforms.time.value = Date.now() - startTime;
+                requestAnimationFrame(render);
+                renderer.render(scene, camera);
+            };
+
+            render();
+
+            // Listen for resize event to update resolution uniforms.
+            window.onresize = function (event) {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                uniforms.resolution.value.x = window.innerWidth;
+                uniforms.resolution.value.y = window.innerHeight;
+            }
+        </script>
+    </body>
+
+</html>

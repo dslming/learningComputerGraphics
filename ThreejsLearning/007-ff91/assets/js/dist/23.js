@@ -1,0 +1,1 @@
+module.exports = '#define DARK_BLUE vec3(0.063, 0.075, 0.094)\n\nuniform samplerCube tCube;\nuniform float tFlip;\nuniform vec3 color;\n\nvarying vec3 vWorldPosition;\n\nvoid main() {\n\t// float multiColor = DARK_BLUE * light;\n\tgl_FragColor = textureCube( tCube, vec3( tFlip * vWorldPosition.x, vWorldPosition.yz ) );\n\tgl_FragColor.rgb *= color;\n}\n';

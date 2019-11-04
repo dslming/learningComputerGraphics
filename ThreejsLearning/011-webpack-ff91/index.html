@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src='../lib/three(105).js'></script>
+    <script src='../lib/OrbitControls.js'></script>
+    <script src='./static/js/CSS3DRenderer.js'></script>
+    <script src="./static/js/TweenMax.min.js"></script>
+    <script src="./static/js/hammer.js"></script>
+</head>
+<body>
+    <style>
+        html,body{
+            margin: 0;
+            padding: 0;
+            border: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        #GLCanvas{
+            /* display: none; */
+        }
+        #GLCanvas, #CSSCanvas {
+            position: absolute;
+            left: 0;
+            right: 0;
+        }
+    </style>
+    <div id="GLCanvas"></div>
+    <div id="CSSCanvas"></div>
+
+    <script data-main="dist/ff91" src="static/js/require.min.js"></script>
+    <script>
+        require(["ff91"], (ff91)=>{
+            TweenLite.defaultEase = Power2.easeInOut;
+            var control;
+
+            function initApp() {
+                control = new ff91.Control()
+                window.lm = control
+                window.scene = lm.sceneWGL
+                render(window.performance.now());
+            }
+
+            function render(t) {
+                control.update(t * 0.001);
+                requestAnimationFrame(render);
+            }
+
+            initApp();
+        })
+    </script>
+</body>
+</html>

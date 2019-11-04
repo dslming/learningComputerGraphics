@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src='../lib/three(105).js'></script>
+  <script src="../lib/GLTFLoader.js"></script>
+  <script src='../lib/OrbitControls.js'></script>
+  <script src='../lib/TweenMax.js'></script>
+  <script src="./SkyBox.js"></script>
+</head>
+<body>
+  <div id="Wrapper"></div>
+  <script>
+    // 帧率
+    let FPS = 60;
+    // 帧率的倒数
+    let INV_FPS = 1 / FPS;
+    // 角度转弧度
+    let DEG_TO_RAD = Math.PI / 180;
+    // 视口的宽
+    let CAMERA_VIEW_WIDTH = 480 / 480 * 500;
+    // 视口的高
+    let CAMERA_VIEW_HEIGHT = 320 / 480 * 500;
+    // 视角
+    let ASPECT_RATIO = CAMERA_VIEW_WIDTH / CAMERA_VIEW_HEIGHT;
+    // 边缘z
+    let MARGIN_Z = 0.1;
+    // 俯仰角Y
+    let FOVY = 30;
+    // 滚动X
+    let SCROLL_X = 20;
+    // 滚动水平
+    let SCROLL_HZ = 0.05;
+    // 环绕向量
+    let AROUND_VECTOR = new THREE.Vector3(0, 20, 150);
+    // 环绕水平
+    let AROUND_HZ = 0.025;
+    // 格数
+    let SEGS = 1;
+    // 近距离
+    let NEAR_LENGTH = 5;
+    // 中间距离
+    let MIDDLE_LENGTH = 15;
+    // 远距离
+    let FAR_LENGTH = 20;
+    // 近高度
+    let NEAR_HEIGHT = Math.tan(FOVY * 0.5 * DEG_TO_RAD) * NEAR_LENGTH * 2;
+    // 中高度
+    let MIDDLE_HEIGHT = NEAR_HEIGHT / NEAR_LENGTH * MIDDLE_LENGTH;
+    // 远高度
+    let FAR_HEIGHT = NEAR_HEIGHT / NEAR_LENGTH * FAR_LENGTH;
+    // 近宽度
+    let NEAR_WIDTH = SCROLL_X * 2 + NEAR_HEIGHT * ASPECT_RATIO;
+    // 中宽度
+    let MIDDLE_WIDTH = SCROLL_X * 2 + MIDDLE_HEIGHT * ASPECT_RATIO;
+    // 远宽度
+    let FAR_WIDTH = SCROLL_X * 2 + FAR_HEIGHT * ASPECT_RATIO;
+    // 屏幕的宽度
+    let SCREEN_WIDTH = CAMERA_VIEW_WIDTH;
+    // 屏幕的高度
+    let SCREEN_HEIGHT = CAMERA_VIEW_HEIGHT * 2;
+    let that = null
+
+    class Game {
+      constructor(container) {
+        that = this
+        window.lm=that
+        this.time = 0;
+
+        // animation
+        this.spot = {
+          type: 'distant', // distant距离模式, rotation旋转模式
+          status: 'stop', // 运动状态
+          start: null, //开始位置
+          coutn: 0 //计数器
+        }
+
+        // render
+        this.container = container;
+        this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.container.append(this.renderer.domElement);
+        this.renderer.autoClear = false;
+
+        // scene
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0xaaaaaa)
+        window.scene = this.scene
+        
+        // 坐标轴
+        let axesHelper = new THREE.AxesHelper(50);
+        this.scene.add(axesHelper); 
+        
+        // 光
+        var light = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
+        light.position.set(0, 0, 0);
+        light.name = 'HemisphereLight'
+        this.scene.add( light );
+
+        // 模型加载-建筑物
+        let loader = new THREE.GLTFLoader().setPath( 'models/' );
+        loader.load('building.gltf', gltf => {
+          this.scene.add( gltf.scene );
+        },v=>{
+          console.error(`加载: ${v.loaded/v.total * 100}%`)
+        },e=>{
+          console.error(e)
+        })
+
+        // 模型加载-地板
+        var geometry = new THREE.BoxGeometry(50, 0.5, 50, 10, 1, 10);
+        var material = new THREE.MeshBasicMaterial( {color: 0x76c6ee, side: THREE.DoubleSide} );
+        var plane = new THREE.Mesh( geometry, material );
+        plane.name = 'plane'
+        plane.position.set(0,-2,0)
+        this.scene.add( plane );
+
+        // 天空盒子
+        let skybox = new SkyBox()
+        skybox.mesh.name = 'skybox'
+        this.scene.add(skybox.mesh)
+
+        // 用户相机
+        this.cameraUser = new THREE.PerspectiveCamera(FOVY, CAMERA_VIEW_WIDTH/CAMERA_VIEW_HEIGHT, 1, 500);
+        this.cameraUser.name = 'cameraUser'
+        this.cameraUser.position.copy(AROUND_VECTOR)
+        this.cameraUser.lookAt(0, 0, 0)
+        this.scene.add(this.cameraUser);
+
+        this.initControl()
+        // 运行
+        this.run()
+      }
+
+      initControl() {
+        this.control = new THREE.OrbitControls(this.cameraUser, this.container)
+        this.control.autoRotate = false
+        this.control.enabled = true
+      }
+
+      update(dt) {
+        let p = this.cameraUser.position
+        // 以自己为轴
+        // let rotWorldMatrix = new THREE.Matrix4();
+        // rotWorldMatrix.makeRotationAxis({x: 0, y:1, z: 0}, 0.3*DEG_TO_RAD);
+        // rotWorldMatrix.multiply(this.cameraUser.matrix)
+        // this.cameraUser.matrix.copy(rotWorldMatrix)
+        // this.cameraUser.rotation.setFromRotationMatrix(this.cameraUser.matrix);
+
+        // let d = p.applyAxisAngle({
+        //   x: 0,
+        //   y: 1,
+        //   z: 0
+        // }, 0.3*DEG_TO_RAD)
+        this.animation(this.cameraUser)
+        this.cameraUser.lookAt(0, 0, 0)
+
+        // TweenMax.to(this.cameraUser.position, 1, {x: d, 'yoyo': false})
+      }
+
+      async animation(obj) {
+        let that = this
+        let position = obj.position
+
+        // 1) 镜头从远到近
+        if(this.spot.type === 'distant' && this.spot.status === 'stop') {
+          this.spot.status = 'run'
+          TweenMax.to(position, 5, {z: 50, 'yoyo': false, onComplete: ()=>{
+            that.spot.status = 'stop'
+            that.spot.type = 'rotation'
+            that.spot.start = position.x
+            console.error(that.spot.start, 'start')
+          }})
+        }
+
+        // 2) 旋转一圈
+        else if(this.spot.type === 'rotation' && this.spot.status === 'stop') {
+          position.applyAxisAngle({
+                    x: 0,
+                    y: 1,
+                    z: 0
+                  }, 1*DEG_TO_RAD)
+
+          // 旋转了一周
+          that.spot.coutn += 1
+          if(that.spot.coutn > 360) {
+            that.spot.status = 'run'
+            TweenMax.to(position, 2, {y: 10, 'yoyo': false})
+          }
+        }
+      }
+
+      draw() {
+        this.renderer.clear();
+        // 用户相机
+        this.renderer.render(this.scene, this.cameraUser);
+      }
+      run() {
+        that.update()
+        that.draw()
+        requestAnimationFrame(that.run)
+      }
+    }
+  </script>
+  <script>
+    let ele = document.querySelector('#Wrapper')
+    let game=new Game(ele)
+  </script>
+</body>
+</html>

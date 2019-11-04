@@ -1,0 +1,123 @@
+> 前言
+> 传统shader学习只能在opengl中学习,现如今借助webgl,在浏览器中就可以轻松写shader代码。
+> 诸如shadertoy等实现了非常炫酷的网页效果。本教程就使用three.js库开始shader学习之旅。
+
+### 参考资料
+shader教程: https://thebookofshaders.com/
+
+### shader 框架
+搭建一个最基本的基于three.js 的 shader框架。
+```js
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #container {
+    position: fixed;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js"></script>
+<script id="vertexShader" type="x-shader/x-vertex">
+    void main() {
+        gl_Position = vec4( position, 1.0 );
+    }
+</script>
+<script id="fragmentShader" type="x-shader/x-fragment">
+    // u_resolution.xy, 当前屏幕的xy, eg: u_resolution.xy=(100, 200)
+    uniform vec2 u_resolution;
+    void main(){
+        // gl_FragCoord.xy 当前像素的xy, eg: gl_FragCoord.xy=(50, 50)
+        // st 归一化的坐标(x,y都映射到了0~1), eg: st=(0.5, 0.25)
+        vec2 st = gl_FragCoord.xy / u_resolution.xy;
+        // aspect 宽高比, eg: aspect = 100/200 = 0.5
+        float aspect = u_resolution.x / u_resolution.y;
+        // 保持宽高比统一, eg: st=(0.25, 0.25)
+        // 也可以这样理解:
+        //    像素 x 的范围是0~100,像素 y 的范围是0～200,
+        //    归一化后, st.x 和 st.y 的映射都是0~1范围,
+        //    归一化后, st.x 和 st.y 应该保持归一化后相同的宽高比,
+        //    所以, 需要 st.x *= u_resolution.x / u_resolution.y;
+        st.x *= aspect;
+        vec3 color = vec3(0.0);
+
+        // if( st.x > 0.1 && st.y > 0.1) {
+        //   paint white(1)
+        // } else {
+        //   paint black(0)
+        // }
+        float left = step(0.1,st.x);
+        float bottom = step(0.1,st.y);
+
+        // The multiplication of left*bottom will be similar to the logical AND.
+        // vec3(0) => (0,0,0), vec3(1) => (1,1,1)
+        color = vec3(left * bottom);
+        gl_FragColor = vec4(color,1.0);
+    }
+</script>
+<div id="container"></div>
+
+<script>
+  let container;
+  let camera, scene, renderer;
+  let uniforms;
+
+  function init() {
+    container = document.getElementById('container');
+    camera = new THREE.Camera();
+    camera.position.z = 1;
+    scene = new THREE.Scene();
+    var geometry = new THREE.PlaneBufferGeometry(2, 2);
+    uniforms = {
+      u_time: { type: "f", value: 1.0 },
+      u_resolution: { type: "v2", value: new THREE.Vector2() },
+      u_mouse: { type: "v2", value: new THREE.Vector2() }
+    };
+
+    var material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: document.getElementById('vertexShader').textContent,
+      fragmentShader: document.getElementById('fragmentShader').textContent
+    });
+
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    container.appendChild(renderer.domElement);
+
+    onWindowResize();
+    window.addEventListener('resize', onWindowResize, false);
+
+    document.onmousemove = function (e) {
+      uniforms.u_mouse.value.x = e.pageX
+      uniforms.u_mouse.value.y = e.pageY
+    }
+  }
+
+  function onWindowResize(event) {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    uniforms.u_resolution.value.x = renderer.domElement.width;
+    uniforms.u_resolution.value.y = renderer.domElement.height;
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    render();
+  }
+
+  function render() {
+    uniforms.u_time.value += 0.05;
+    renderer.render(scene, camera);
+  }
+
+  init();
+  animate();
+</script>
+```
+
+### 详细说明
+shader的内部细节,详细参考, `three.js中使用GLSL指南.md`

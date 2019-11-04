@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body onload="main()">
+    <p>webgl 使用shader显示一个点</p>
+    <canvas id="webgl" width="400" height="400">
+        Please use the browert supporting "canvas"
+    </canvas>
+    <script>
+        function getWebGLContext(canvas, opt_debug) {
+            // Get the rendering context for WebGL
+            const gl = canvas.getContext('webgl');
+            if (!gl) return null;
+
+            // if opt_debug is explicitly false, create the context for debugging
+            if (arguments.length < 2 || opt_debug) {
+                //gl = WebGLDebugUtils.makeDebugContext(gl);
+            }
+
+            return gl;
+        }
+        function loadShader(gl, type, source) {
+            // Create shader object
+            var shader = gl.createShader(type);
+            if (shader == null) {
+                console.log('unable to create shader');
+                return null;
+            }
+
+            // Set the shader program
+            gl.shaderSource(shader, source);
+
+            // Compile the shader
+            gl.compileShader(shader);
+
+            // Check the result of compilation
+            var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+            if (!compiled) {
+                var error = gl.getShaderInfoLog(shader);
+                console.log('Failed to compile shader: ' + error);
+                gl.deleteShader(shader);
+                return null;
+            }
+
+            return shader;
+        }
+
+        function createProgram(gl, vshader, fshader) {
+            // Create shader object
+            var vertexShader = loadShader(gl, gl.VERTEX_SHADER, vshader);
+            var fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fshader);
+            if (!vertexShader || !fragmentShader) {
+                return null;
+            }
+
+            // Create a program object
+            var program = gl.createProgram();
+            if (!program) {
+                return null;
+            }
+
+            // Attach the shader objects
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+
+            // Link the program object
+            gl.linkProgram(program);
+
+            // Check the result of linking
+            var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
+            if (!linked) {
+                var error = gl.getProgramInfoLog(program);
+                console.log('Failed to link program: ' + error);
+                gl.deleteProgram(program);
+                gl.deleteShader(fragmentShader);
+                gl.deleteShader(vertexShader);
+                return null;
+            }
+            return program;
+        }
+        
+        function initShaders(gl, vshader, fshader) {
+            var program = createProgram(gl, vshader, fshader);
+            if (!program) {
+                console.log('Failed to create program');
+                return false;
+            }
+
+            gl.useProgram(program);
+            gl.program = program;
+
+            return true;
+        }
+
+        // HelloPoint1.js
+        // 顶点着色器程序
+        var VSHADER_SOURCE =
+            'void main() {\n' +
+            ' gl_Position = vec4(0.5, 0.0, 0.0, 1.0);\n' + // 设置坐标
+            ' gl_PointSize = 20.0;\n' + // 设置尺寸
+            '}\n';
+
+        // 片元着色器程序
+        var FSHADER_SOURCE =
+            'void main() {\n' +
+            ' gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' + // 设置颜色
+            '}\n';
+
+
+        function main() {
+            // 获取<canvas>元素
+            var canvas = document.getElementById('webgl');
+
+            // 获取WebGL绘图上下文
+            var gl = getWebGLContext(canvas);
+
+            if(!gl) {
+                console.log('Failed to get the rendering context for WebGL');
+                return;
+            }
+
+            // 初始化着色器
+            if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+                console.log('Failed to initialize shaders');
+                return;
+            }
+
+            // 设置<canvas>的背景色
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+            // 清空<canvas>
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // 绘制一个点
+            gl.drawArrays(gl.POINTS, 0, 1);
+        }
+    </script>
+</body>
+</html>

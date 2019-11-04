@@ -1,0 +1,1 @@
+module.exports = '#define RED_COLOR vec3(1.0, 0.1, 0.1) // red\n#define AMB_COLOR vec3(1.0, 0.6, 0.1)\t// amber\n#define WHT vec3(1.0, 1.0, 1.0)\t// white\n\nvarying float redVal;\nvarying float ambVal;\nvarying float whtVal;\nvarying float brightness;\n\nvoid main() {\n\tgl_FragColor = vec4((RED_COLOR * redVal + AMB_COLOR * ambVal) * brightness, 1.0);\n}';
