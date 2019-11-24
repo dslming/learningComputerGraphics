@@ -26,7 +26,7 @@ FragmentShader
 
 #### 变量已由threejs定义
 | 变量名称 | 说明 |
-| -------- | ---- ||
+| -------- | ---- |
 | modelMatrix      | 从对象坐标转换为世界坐标                                                     |
 | viewMatrix       | 从世界坐标转换为视点坐标                                                     |
 | modelViewMatrix  | 整合modelMatrix和viewMatrix                                                  |
@@ -35,7 +35,7 @@ FragmentShader
 | normalMatrix     | 矩阵将顶点法线向量转换为视点坐标系                                           |
 | position         | 顶点坐标                                                                     |
 | nomail           | 顶点法向量                                                                   |
-| 紫外线           | 用于粘贴纹理的UV坐标                                                         |
+| vUv           | 用于粘贴纹理的UV坐标                                                         |
 
 顶点着色器可以使用所有内容。
 对于片段着色器，只能使用viewMatrix和cameraPosition。
