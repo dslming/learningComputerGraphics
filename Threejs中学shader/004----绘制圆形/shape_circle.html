@@ -22,14 +22,25 @@
 <script id="fragmentShader" type="x-shader/x-fragment">
     uniform vec2 u_resolution;
 
-    vec3 circle(vec2 st, float rad) {
+    vec3 circle01(vec2 st, float rad) {
       vec2 pos = st-vec2(.5);
       float r = length(pos);
       return vec3(step(r, rad));
     }
+
+    vec3 circle02(in vec2 uv, in float rad){
+      // 圆心坐标
+      vec2 centerPos = vec2(0.5);
+      // 当前像素和圆心构成的向量
+      vec2 dist = uv-centerPos;
+      // 勾股定义
+      float a = step(sqrt(dot(dist,dist)), rad);
+      return vec3( a);
+    }
+
     void main(){
         vec2 st = gl_FragCoord.xy/u_resolution.xy;
-        vec3 color = circle(st, .5);
+        vec3 color = circle02(st, .5);
         gl_FragColor = vec4(color, 1.0);
     }
 </script>
