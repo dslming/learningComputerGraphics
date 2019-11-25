@@ -2,6 +2,7 @@
 
 // import * as THREE from '//techbrood.com/threejs/build/three.module.js';
 // import { OrbitControls } from '//techbrood.com/threejs/examples/jsm/controls/OrbitControls.js';
+import fragment from './fragment.js.js'
 window.OrbitControls = THREE.OrbitControls
 const res = {
   uv: './country-index-texture.png',
@@ -72,7 +73,7 @@ class Stage {
     this.scene = null
     this.pickingScene = null
 
-    // 纹理
+    // 纹睆
     this.maxNumCountries = 512;
     this.paletteTextureWidth = this.maxNumCountries
     this.paletteTexture = null
@@ -445,11 +446,15 @@ class DDD {
 }
 
 
-function main() {
+// export default function main() {
+
+//   // controls.addEventListener('change', requestRenderIfNotRequested);
+//   // window.addEventListener('resize', requestRenderIfNotRequested);
+// }
+
+window.onload = () => {
   let stage = new Stage()
   stage.loop()
-  // controls.addEventListener('change', requestRenderIfNotRequested);
-  // window.addEventListener('resize', requestRenderIfNotRequested);
 }
 
 

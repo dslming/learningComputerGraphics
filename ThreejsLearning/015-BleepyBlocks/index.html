@@ -1,0 +1,134 @@
+<p>贪心块</p>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #container {
+    position: fixed;
+  }
+
+</style>
+<script src="../lib/three(105).js"></script>
+<script id="vertexShader" type="x-shader/x-vertex">
+  varying highp vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+  }
+</script>
+<script id="fragmentShader" type="x-shader/x-fragment">
+  uniform vec3 u_resolution;
+  uniform float u_time;
+  uniform sampler2D iChannel0;
+
+  // By Daedelus: https://www.shadertoy.com/user/Daedelus
+  // license: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+  #define TIMESCALE 0.25
+  #define TILES 8
+  #define COLOR 0.7, 1.6, 2.8
+
+  void mainImage( out vec4 fragColor, in vec2 fragCoord )
+  {
+    vec2 uv = fragCoord.xy / u_resolution.xy;
+    uv.x *= u_resolution.x / u_resolution.y;
+
+    vec4 noise = texture2D(iChannel0, floor(uv * float(TILES)) / float(TILES));
+    float p = 1.0 - mod(noise.r + noise.g + noise.b + u_time * float(TIMESCALE), 1.0);
+    p = min(max(p * 3.0 - 1.8, 0.1), 2.0);
+
+    vec2 r = mod(uv * float(TILES), 1.0);
+    r = vec2(pow(r.x - 0.5, 2.0), pow(r.y - 0.5, 2.0));
+    p *= 1.0 - pow(min(1.0, 12.0 * dot(r, r)), 2.0);
+
+    fragColor = vec4(COLOR, 1.0) * p;
+  }
+
+  void main() {
+    mainImage(gl_FragColor, gl_FragCoord.xy);
+  }
+</script>
+<div id="container"></div>
+
+<script>
+  var container;
+  var camera, scene, renderer;
+  var uniforms;
+
+  function loadTexture(url) {
+    return new Promise((resolve, reject) => {
+      const loader = new THREE.TextureLoader();
+      loader.load(url, (res) => {
+        resolve(res)
+      });
+    })
+  }
+
+  async function init() {
+    container = document.getElementById('container');
+    camera = new THREE.Camera();
+    camera.position.z = 1;
+    scene = new THREE.Scene();
+    window.scene = scene
+    scene.add(camera)
+    const texture = await loadTexture("./bayer.png")
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.NearestFilter;
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    const plane = new THREE.PlaneBufferGeometry(2, 2);
+    uniforms = {
+      u_time: { type: "f", value: 0 },
+      u_resolution: { type: "v3", value: new THREE.Vector3() },
+      u_mouse: { type: "v2", value: new THREE.Vector2() },
+      // iChannel0: { type: "t", value: texture }
+    };
+
+    var material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: document.getElementById('vertexShader').textContent,
+      fragmentShader: document.getElementById('fragmentShader').textContent
+    });
+
+    var mesh = new THREE.Mesh(plane, material);
+    scene.add(mesh);
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.autoClearColor = false;
+    container.appendChild(renderer.domElement);
+
+    onWindowResize();
+    window.addEventListener('resize', onWindowResize, false);
+
+    document.onmousemove = function (e) {
+      uniforms.u_mouse.value.x = e.pageX
+      uniforms.u_mouse.value.y = e.pageY
+    }
+    animate();
+  }
+
+  function onWindowResize(event) {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    uniforms.u_resolution.value.x = renderer.domElement.width;
+    uniforms.u_resolution.value.y = renderer.domElement.height;
+    uniforms.u_resolution.value.z = 1;
+    // console.error(uniforms.u_resolution)
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    render();
+  }
+
+  function render() {
+    uniforms.u_time.value += 0.05;
+    renderer.render(scene, camera);
+  }
+
+
+
+  init();
+  //
+</script>

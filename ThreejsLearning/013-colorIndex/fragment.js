@@ -18,7 +18,7 @@ let f2 = `
   }
 `
 
-const fragment = {
+export default {
   f1,
   f2
 }
