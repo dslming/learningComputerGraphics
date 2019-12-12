@@ -2,7 +2,7 @@
 
 // import * as THREE from '//techbrood.com/threejs/build/three.module.js';
 // import { OrbitControls } from '//techbrood.com/threejs/examples/jsm/controls/OrbitControls.js';
-import fragment from './fragment.js.js'
+import fragment from './fragment.js'
 window.OrbitControls = THREE.OrbitControls
 const res = {
   uv: './country-index-texture.png',
