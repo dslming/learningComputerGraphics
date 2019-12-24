@@ -11,9 +11,11 @@ const vertexShader = `
 attribute vec3 aOffset;
   void main() {
     vec3 transformed = position.xyz;
+    // 将它们分开以使下一步更容易！
 		// Keep them separated to make the next step easier!
-	   transformed.z = transformed.z + aOffset.z;
-        transformed.xy += aOffset.xy;
+     // transformed.z = transformed.z + aOffset.z;
+     transformed.z += aOffset.z;
+     transformed.xy += aOffset.xy;
 
         vec4 mvPosition = modelViewMatrix * vec4(transformed,1.);
         gl_Position = projectionMatrix * mvPosition;
@@ -71,7 +73,6 @@ export class Stage {
   run() {
     setInterval(v => {
       that.renderer.render(that.scene, that.camera);
-      // that.control.update()
     }, 200)
   }
 
@@ -139,6 +140,8 @@ export class Stage {
       aOffset.push(offsetY);
       aOffset.push(-offsetZ);
     }
+    console.error(aOffset);
+
 
 
     // Add the offset to the instanced geometry.
@@ -159,6 +162,68 @@ export class Stage {
     mesh.name = "carLights"
     this.scene.add(mesh);
   }
+
+  addObjLightsNoBuffer(o) {
+    const options = o
+    // 每个车道的宽度 3
+    let sectionWidth = options.roadWidth / options.roadSections;
+    let material = new THREE.MeshBasicMaterial({ color: 0xfafafa });
+
+    for (let i = 0; i < options.nPairs; i++) {
+      let section = i % 3; // 0,1,2
+      let sectionX =
+        section * sectionWidth - options.roadWidth / 2 + sectionWidth / 2;
+      let carWidth = 0.5 * sectionWidth;
+      let offsetX = 0.5 * Math.random();
+      let offsetY = 1.3;
+      let offsetZ = Math.random() * options.length;
+
+      let curve1 = {
+        x: sectionX - carWidth / 2 + offsetX,
+        y: offsetY,
+        z: -offsetZ
+      }
+
+      let curve2 = {
+        x: sectionX + carWidth / 2 + offsetX,
+        y: offsetY,
+        z: -offsetZ
+      }
+      // console.error(curve1, curve2);
+
+      let curve11 = new THREE.LineCurve3(
+        new THREE.Vector3(curve1.x, curve1.y, curve1.z - 1),
+        new THREE.Vector3(curve1.x, curve1.y, curve1.z),
+      );
+      let curve22 = new THREE.LineCurve3(
+        new THREE.Vector3(curve2.x, curve2.y, curve2.z - 1),
+        new THREE.Vector3(curve2.x, curve2.y, curve2.z),
+      );
+      let geom11 = new THREE.TubeBufferGeometry(curve11, 25, 1, 8, true);
+      let mesh11 = new THREE.Mesh(geom11, material);
+      this.scene.add(mesh11)
+
+      let geom22 = new THREE.TubeBufferGeometry(curve22, 25, 1, 8, true);
+      let mesh22 = new THREE.Mesh(geom22, material);
+      this.scene.add(mesh22)
+    }
+  }
+
+  addObjLightsOne() {
+    let curve = new THREE.LineCurve3(
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0, 0, -1)
+    );
+
+    // 绘制一个圆柱体,圆柱体的半径1,圆柱体的走向为曲线curve,就是是一个管道。
+    let baseGeometry = new THREE.TubeBufferGeometry(curve, 64, 1, 8, false);
+    let material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+    let mesh = new THREE.Mesh(baseGeometry, material);
+    mesh.position.set(0, 0, -30)
+    this.camera.position.set(0, 0, -5)
+
+    this.scene.add(mesh)
+  }
 }
 
 const options = {
@@ -168,12 +233,14 @@ const options = {
   roadWidth: 9,
   islandWidth: 2,
   // 圆环的对儿数
-  nPairs: 20,
+  nPairs: 1,
   // 一共3个车道
   roadSections: 3
 };
 
 let a = new Stage("#app")
-a.addObjRoad(options)
+// a.addObjRoad(options)
+// a.addObjLightsNoBuffer(options)
 a.addObjLights(options)
+// a.addObjLightsOne()
 a.run()
