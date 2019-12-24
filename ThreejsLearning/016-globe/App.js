@@ -10,7 +10,6 @@ class App {
     this.uniforms = null
     this.onWindowResize = this.onWindowResize.bind(this);
     this.animate = this.animate.bind(this);
-    this.render = this.render.bind(this);
 
     this.initStage()
     this.addObj()
@@ -88,10 +87,6 @@ class App {
 
   animate() {
     requestAnimationFrame(this.animate);
-    this.render();
-  }
-
-  render() {
     // this.uniforms.u_time.value += 0.05;
     this.renderer.render(this.scene, this.camera);
   }
