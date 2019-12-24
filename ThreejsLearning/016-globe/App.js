@@ -12,7 +12,10 @@ class App {
     this.animate = this.animate.bind(this);
     this.render = this.render.bind(this);
 
-    this.init()
+    this.initStage()
+    this.addObj()
+
+    window.addEventListener('resize', this.onWindowResize, false);
   }
 
   static loadTexture(url) {
@@ -24,19 +27,15 @@ class App {
     })
   }
 
-
-  async init() {
-    this.container = document.getElementById('container');
-    this.camera = new THREE.Camera();
-    this.camera.position.z = 1;
-    this.scene = new THREE.Scene();
-    window.scene = this.scene
-    this.scene.add(this.camera)
+  async addObj() {
+    // 纹理
     const texture = await App.loadTexture("./uv.png")
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.NearestFilter;
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
+
+    // 几何体
     const plane = new THREE.PlaneBufferGeometry(2, 2);
     this.uniforms = {
       u_time: { type: "f", value: 0 },
@@ -45,23 +44,39 @@ class App {
       iChannel0: { type: "t", value: texture }
     };
 
+    // 材质
     var material = new THREE.ShaderMaterial({
       uniforms: this.uniforms,
-      vertexShader: vertexShader,//document.getElementById('vertexShader').textContent,
-      fragmentShader: fragmentShader//document.getElementById('fragmentShader').textContent
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader
     });
 
+    // 网格
     var mesh = new THREE.Mesh(plane, material);
-    scene.add(mesh);
+    mesh.name = "spare"
+    this.scene.add(mesh);
 
+    // 开始渲染
+    this.onWindowResize();
+    this.animate();
+  }
+
+  initStage() {
+    // 相机
+    this.camera = new THREE.Camera();
+    this.camera.position.z = 1;
+
+    // 场景
+    this.scene = new THREE.Scene();
+    window.scene = this.scene
+    this.scene.add(this.camera)
+
+    // 渲染器
+    this.container = document.getElementById('container');
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.autoClearColor = false;
     this.container.appendChild(this.renderer.domElement);
-
-    this.onWindowResize();
-    window.addEventListener('resize', this.onWindowResize, false);
-    this.animate();
   }
 
   onWindowResize() {
