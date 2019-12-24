@@ -17,9 +17,17 @@ class App {
     this.leftLights = new CarLights(this.stage, options, 0xff102a);
     this.rightLights = new CarLights(this.stage, options, 0xfafafa);
 
-    this.road.init()
     this.leftLights.init()
-    this.rightLights.init()
+    this.leftLights.mesh.position.setX(
+      -options.roadWidth / 2 - options.islandWidth / 2
+    );
+
+    this.rightLights.init();
+    this.rightLights.mesh.position.setX(
+      options.roadWidth / 2 + options.islandWidth / 2
+    );
+
+    this.road.init()
     this.stage.run()
   }
 }

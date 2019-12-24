@@ -1,5 +1,7 @@
 > 翻译自: https://tympanus.net/codrops/2019/11/13/high-speed-light-trails-in-three-js/
 
+> 代码: https://github.com/dslming/learningComputerGraphics/tree/master/ThreejsLearning/017-InfiniteLights
+
 ## 无限灯光
 灵感来自 [海报](https://www.pinterest.com/pin/321514860899167708/)
 <img src="./Akira.jpg">
@@ -190,7 +192,7 @@ addObjLightsNoBuffer(o) {
 
 
 
-#### 5、InstancedBufferGeometry创建多车灯
+#### 5、 InstancedBufferGeometry 创建多车灯
 ```js
 addObjLights(o) {
   const options = o
@@ -260,18 +262,64 @@ addObjLights(o) {
 效果应该和上面的是相同的。
 <img src="04.png">
 
+#### 6、InstancedBufferGeometry 的用法
+```js
+const fragmentShader = `
+uniform vec3 uColor;
+  void main() {
+      vec3 color = vec3(uColor);
+      gl_FragColor = vec4(color,1.);
+  }
+`;
+
+const vertexShader = `
+attribute vec3 aOffset;
+  void main() {
+    vec3 transformed = position.xyz;
+    transformed.xyz += aOffset.xyz;
+    vec4 mvPosition = modelViewMatrix * vec4(transformed,1.);
+    gl_Position = projectionMatrix * mvPosition;
+	}
+`;
+
+addObjLightsInstanced(o) {
+  // 三维线段曲线
+  let curve = new THREE.LineCurve3(
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(0, 0, -1)
+  );
+
+  // 管道缓冲几何体 (path, tubularSegments, radius, radialSegments, closed)
+  let baseGeometry = new THREE.TubeBufferGeometry(curve, 25, 1, 8, true);
+
+  // 创建一个instancedBufferGeometry
+  let instanced = new THREE.InstancedBufferGeometry().copy(baseGeometry);
+
+  let aOffset = [0, 0, -50, 0, 0, -80, 0, 0, -100];
+  let arr = new Float32Array(aOffset)
+  instanced.addAttribute(
+    "aOffset",
+    new THREE.InstancedBufferAttribute(arr, 3, false)
+  );
+
+  const material = new THREE.ShaderMaterial({
+    fragmentShader,
+    vertexShader,
+    uniforms: {
+      uColor: new THREE.Uniform(new THREE.Color("0xfafafa"))
+    }
+  });
+  let mesh = new THREE.Mesh(instanced, material);
+  // 相机视界之外的会被踢出
+  mesh.frustumCulled = false;
+  mesh.name = "carLights"
+  this.scene.add(mesh);
+}
+```
+原理是对单个车灯进行平移,然后产生了3个管道。
+<img src="08.png">
+
+<全文结束, 多多点赞会变好看, 多多评论会变有钱>
 
 
 
-
-#### 参考资料
-[教程](https://tympanus.net/codrops/2019/11/13/high-speed-light-trails-in-three-js/)
-[打包工具](https://parceljs.org/getting_started.html)
-[InstancedBufferGeometry](https://github.com/nicoptere/FluffyPredator)
-[InstancedBufferGeometry 官网](https://threejs.org/docs/index.html#api/zh/core/InstancedBufferGeometry)
-
-
-### 第二阶段
-[完整代码](step2-Two sided road)
-最后效果:
-<img src="./07.png">

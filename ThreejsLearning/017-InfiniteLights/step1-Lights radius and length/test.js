@@ -1,24 +1,23 @@
 let that = null;
 const fragmentShader = `
+varying vec3 myposition;
 uniform vec3 uColor;
   void main() {
       vec3 color = vec3(uColor);
+      // vec3 color = vec3(myposition.x, myposition.y, myposition.z);
       gl_FragColor = vec4(color,1.);
   }
 `;
 
 const vertexShader = `
+varying vec3 myposition;
 attribute vec3 aOffset;
   void main() {
+    myposition = position;
     vec3 transformed = position.xyz;
-    // 将它们分开以使下一步更容易！
-		// Keep them separated to make the next step easier!
-     // transformed.z = transformed.z + aOffset.z;
-     transformed.z += aOffset.z;
-     transformed.xy += aOffset.xy;
-
-        vec4 mvPosition = modelViewMatrix * vec4(transformed,1.);
-        gl_Position = projectionMatrix * mvPosition;
+    transformed.xyz += aOffset.xyz;
+    vec4 mvPosition = modelViewMatrix * vec4(transformed,1.);
+    gl_Position = projectionMatrix * mvPosition;
 	}
 `;
 
@@ -95,10 +94,8 @@ export class Stage {
     console.log(mesh);
   }
 
-
   addObjLights(o) {
     const options = o
-
     // 三维线段曲线
     let curve = new THREE.LineCurve3(
       new THREE.Vector3(0, 0, 0),
@@ -112,7 +109,7 @@ export class Stage {
     let instanced = new THREE.InstancedBufferGeometry().copy(baseGeometry);
     instanced.maxInstancedCount = options.nPairs * 2;
 
-    let aOffset = [];
+    let aOffset = []
     // 每个车道的宽度 3
     let sectionWidth = options.roadWidth / options.roadSections;
 
@@ -145,9 +142,12 @@ export class Stage {
 
 
     // Add the offset to the instanced geometry.
+    let arr = new Float32Array(aOffset)
+    // console.error(arr);
+
     instanced.addAttribute(
       "aOffset",
-      new THREE.InstancedBufferAttribute(new Float32Array(aOffset), 3, false)
+      new THREE.InstancedBufferAttribute(arr, 3, false)
     );
 
     const material = new THREE.ShaderMaterial({
@@ -158,6 +158,40 @@ export class Stage {
       }
     });
     let mesh = new THREE.Mesh(instanced, material);
+    // 相机视界之外的会被踢出
+    mesh.frustumCulled = false;
+    mesh.name = "carLights"
+    this.scene.add(mesh);
+  }
+  addObjLightsInstanced(o) {
+    // 三维线段曲线
+    let curve = new THREE.LineCurve3(
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0, 0, -1)
+    );
+
+    // 管道缓冲几何体 (path, tubularSegments, radius, radialSegments, closed)
+    let baseGeometry = new THREE.TubeBufferGeometry(curve, 25, 1, 8, true);
+
+    // 创建一个instancedBufferGeometry
+    let instanced = new THREE.InstancedBufferGeometry().copy(baseGeometry);
+
+    let aOffset = [0, 0, -50, 0, 0, -80, 0, 0, -100];
+    let arr = new Float32Array(aOffset)
+    instanced.addAttribute(
+      "aOffset",
+      new THREE.InstancedBufferAttribute(arr, 3, false)
+    );
+
+    const material = new THREE.ShaderMaterial({
+      fragmentShader,
+      vertexShader,
+      uniforms: {
+        uColor: new THREE.Uniform(new THREE.Color("0xfafafa"))
+      }
+    });
+    let mesh = new THREE.Mesh(instanced, material);
+    // 相机视界之外的会被踢出
     mesh.frustumCulled = false;
     mesh.name = "carLights"
     this.scene.add(mesh);
@@ -241,6 +275,7 @@ const options = {
 let a = new Stage("#app")
 // a.addObjRoad(options)
 // a.addObjLightsNoBuffer(options)
-a.addObjLights(options)
+// a.addObjLights(options)
+a.addObjLightsInstanced()
 // a.addObjLightsOne()
 a.run()
