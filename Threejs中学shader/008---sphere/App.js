@@ -27,19 +27,11 @@ class App {
   }
 
   async addObj() {
-    // 纹理
-    const texture = await App.loadTexture("./uv.png")
-    texture.minFilter = THREE.NearestFilter;
-    texture.magFilter = THREE.NearestFilter;
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-
     // 几何体
     const plane = new THREE.BoxGeometry(0, 0, 0);
     this.uniforms = {
-      u_time: { type: "f", value: 0 },
-      u_resolution: { type: "v3", value: new THREE.Vector3() },
-      iChannel0: { type: "t", value: texture }
+      iTime: { type: "f", value: 0 },
+      iResolution: { type: "v3", value: new THREE.Vector3() },
     };
 
     // 材质
@@ -79,14 +71,14 @@ class App {
 
   onWindowResize() {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.uniforms.u_resolution.value.x = this.renderer.domElement.width;
-    this.uniforms.u_resolution.value.y = this.renderer.domElement.height;
-    this.uniforms.u_resolution.value.z = 1;
+    this.uniforms.iResolution.value.x = this.renderer.domElement.width;
+    this.uniforms.iResolution.value.y = this.renderer.domElement.height;
+    this.uniforms.iResolution.value.z = 1;
   }
 
   animate() {
     requestAnimationFrame(this.animate);
-    // this.uniforms.u_time.value += 0.05;
+    this.uniforms.iTime.value += 0.05;
     this.renderer.render(this.scene, this.camera);
   }
 }
