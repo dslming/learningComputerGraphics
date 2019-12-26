@@ -39,10 +39,10 @@ class App {
     that.clock.getDelta();
     // time: 时钟运行的总时长。
     let time = that.clock.elapsedTime
-    console.error(time);
 
     that.leftLights.update(time);
     that.rightLights.update(time);
+
   }
 }
 let a = new App()

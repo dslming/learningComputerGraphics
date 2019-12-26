@@ -109,14 +109,11 @@ uniform float uTravelLength;
     float zOffset = uTime * uSpeed + aOffset.z;
     zOffset = len - mod(zOffset, uTravelLength);
 
-    // transformed.z +=uTime * uSpeed;
-
-
 		// Keep them separated to make the next step easier!
-	   transformed.z = transformed.z +zOffset ;
-        transformed.xy += aOffset.xy;
+	  transformed.z = transformed.z +zOffset ;
+    transformed.xy += aOffset.xy;
 
-        vec4 mvPosition = modelViewMatrix * vec4(transformed,1.);
-        gl_Position = projectionMatrix * mvPosition;
+    vec4 mvPosition = modelViewMatrix * vec4(transformed,1.);
+    gl_Position = projectionMatrix * mvPosition;
 	}
 `;
