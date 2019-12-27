@@ -1,9 +1,10 @@
-import { fragmentShader } from './fragmentShader.glsl.js'
-import { vertexShader } from './vertexShader.glsl.js'
+import { fragmentShader } from './glsl.fragmentShader.js'
+import { vertexShader } from './glsl.vertexShader.js'
 
 class App {
   constructor() {
     this.container = ""
+    this.control = null
     this.camera = null
     this.scene = null
     this.renderer = null
@@ -13,6 +14,7 @@ class App {
 
     this.initStage()
     this.addObj()
+    this.initControls()
 
     window.addEventListener('resize', this.onWindowResize, false);
   }
@@ -28,7 +30,7 @@ class App {
 
   async addObj() {
     // 几何体
-    const plane = new THREE.BoxGeometry(0, 0, 0);
+    const geometry = new THREE.SphereBufferGeometry(30, 64, 64);
     this.uniforms = {
       iTime: { type: "f", value: 0 },
       iResolution: { type: "v3", value: new THREE.Vector3() },
@@ -40,9 +42,10 @@ class App {
       vertexShader: vertexShader,
       fragmentShader: fragmentShader
     });
+    // var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 
     // 网格
-    var mesh = new THREE.Mesh(plane, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.name = "spare"
     this.scene.add(mesh);
 
@@ -53,8 +56,10 @@ class App {
 
   initStage() {
     // 相机
-    this.camera = new THREE.Camera();
-    this.camera.position.z = 1;
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+    this.camera.position.z = 100;
+    this.camera.position.y = 100;
+    this.camera.name = "camera"
 
     // 场景
     this.scene = new THREE.Scene();
@@ -68,6 +73,25 @@ class App {
     this.renderer.autoClearColor = false;
     this.container.appendChild(this.renderer.domElement);
   }
+  initControls() {
+    let control = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+    this.control = control
+    // 使动画循环使用时阻尼或自转 意思是否有惯性
+    control.enableDamping = true;
+    //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+    control.dampingFactor = 0.35;
+    //是否可以缩放
+    control.enableZoom = true;
+    control.zoomSpeed = 0.35;
+    //是否自动旋转
+    control.autoRotate = false;
+    //设置相机距离原点的最远距离
+    // control.minDistance = 22; //1000
+    //设置相机距离原点的最远距离
+    // control.maxDistance = 50; //3000
+    //是否开启右键拖拽
+    control.enablePan = false;
+  }
 
   onWindowResize() {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -78,8 +102,9 @@ class App {
 
   animate() {
     requestAnimationFrame(this.animate);
-    this.uniforms.iTime.value += 0.05;
+    this.camera.lookAt(this.scene.position)
     this.renderer.render(this.scene, this.camera);
+    this.control && this.control.update()
   }
 }
 
