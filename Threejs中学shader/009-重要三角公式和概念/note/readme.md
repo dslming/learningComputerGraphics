@@ -29,7 +29,7 @@ class App {
 }
 ```
 
-做一个圆周移动的例子。 [代码:step1-圆周运动](https://link)
+做一个圆周移动的例子。 [代码:step1-圆周运动](https://github.com/dslming/learningComputerGraphics/tree/master/Threejs%E4%B8%AD%E5%AD%A6shader/009-%E9%87%8D%E8%A6%81%E4%B8%89%E8%A7%92%E5%85%AC%E5%BC%8F%E5%92%8C%E6%A6%82%E5%BF%B5)
 <img src="02.png">
 
 
@@ -61,7 +61,7 @@ let y = cosθ1*sinθ2
 let z = sinθ1
 positionA = (x, y, z)
 ```
-下图中的公式计算球体上一个点的X，Y和Z坐标。
+下图中的公式计算球体上一个点的X，Y和Z坐标。做一个圆周移动的例子。 [代码:step2-经纬度和3d坐标转化](https://github.com/dslming/learningComputerGraphics/tree/master/Threejs%E4%B8%AD%E5%AD%A6shader/009-%E9%87%8D%E8%A6%81%E4%B8%89%E8%A7%92%E5%85%AC%E5%BC%8F%E5%92%8C%E6%A6%82%E5%BF%B5)
 <img src="03.png">
 
 ```js
@@ -85,7 +85,7 @@ function translateGeoCoords(latitude, longitude, radius) {
 [四元数](https://wgld.org/d/webgl/w031.html)
 [四元数和球面线性插值](https://wgld.org/d/webgl/w034.html)
 
-让我们画一条线，连接上一章中绘制的地球上的点。
+让我们画一条线，连接上一章中绘制的地球上的点。做一个圆周移动的例子。 [代码:step3-连接点](https://github.com/dslming/learningComputerGraphics/tree/master/Threejs%E4%B8%AD%E5%AD%A6shader/009-%E9%87%8D%E8%A6%81%E4%B8%89%E8%A7%92%E5%85%AC%E5%BC%8F%E5%92%8C%E6%A6%82%E5%BF%B5)
 <img src="05.png">
 
 使用四元数来获得两个球形点之间的轨迹坐标。四元数具有有关旋转轴和旋转角度的信息，并表示3D对象的方向。对于实现对象旋转很有用。
