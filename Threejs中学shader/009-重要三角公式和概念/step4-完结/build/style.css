@@ -1,0 +1,8 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #000000;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    tap-highlight-color: rgba(0, 0, 0, 0);
+}
