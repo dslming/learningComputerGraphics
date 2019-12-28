@@ -1,4 +1,4 @@
-> 翻译自: https://ics.media/entry/15321/
+> 翻译自: https://ics.media/entry/10657/
 
 
 ### 对WebGL开发有用的重要三角公式和概念的摘要（Three.js）
@@ -92,7 +92,6 @@ function translateGeoCoords(latitude, longitude, radius) {
 
 ##### step1-获取旋转轴
 创建生成四元数所需的轴。这次的轴是垂直于由从地球中心延伸的两个向量形成的平面的向量。在这种情况下，您可以通过找到两个向量(OA,OB)的叉积来获得垂直向量，因此cross()让我们使用该方法生成轴向量。
-<img src="./07.png">
 
 ```js
 getOrbitPoints() {
