@@ -1,6 +1,9 @@
 const THREE = window.THREE
 let isDrawing = false
 
+/**
+ * 二维点, 在平面 YOZ
+ */
 class Point {
   constructor(x, z) {
     this.x = x;
@@ -18,9 +21,10 @@ export class Bresenham {
 
   addPoints() {
     //当起始点跟终点相同
-    if (pointEnd.z == pointStart.z && pointEnd.x == pointEnd.x == pointStart.x) {
+    if (pointEnd.z == pointStart.z && pointEnd.x == pointStart.x) {
       return;
     }
+
     //当斜率为0时
     if (pointStart.z == pointEnd.z) {
       if (pointEnd.x > 0) {
@@ -122,6 +126,11 @@ export class Bresenham {
   }
 
   setPoints(vector) {
+    console.error({
+      x: vector.x,
+      z: vector.z
+    });
+
     let pointsGeometry = new THREE.Geometry();
     pointsGeometry.vertices.push(vector);
     let pointsMaterial = new THREE.PointsMaterial({ color: 0xff0000, size: 1 });
