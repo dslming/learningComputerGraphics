@@ -5,7 +5,7 @@
 【3】[中点画线法](https://www.jianshu.com/p/6ee51df8b640)
 > 代码地址: https://github.com/dslming/learningComputerGraphics/tree/master/
 
-### 002-中点画线法
+### 002-画线算法-中点画线法
 采用增量思想的DDA算法,虽然只需计算一个加法,但是是浮动数加法。
 
 #### 1、基本原理
@@ -127,3 +127,63 @@ d_0 &= F(x_0+1, y_0+0.5) \\
 
 #### 1、算法实现
 
+```js
+class MidpointLine {
+  ...
+  addLinePoints(p0 = { x: 0, y: 0 }, p1 = { x: 0, y: 0 }) {
+    let a = p0.y - p1.y
+    let b = p1.x - p0.x
+
+    let x = p0.x
+    let y = p0.y
+    this.setPoints({
+      x,
+      y
+    })
+
+    // 斜率绝对值 <= 1
+    if (-a <= b) {
+      let d = 2 * a + b;
+      let d1 = 2 * a;
+      let d2 = 2 * (a + b);
+      while (x < p1.x) {
+        x++
+        if (d < 0) {
+          y++
+          d += d2
+        } else {
+          d += d1
+        }
+        this.setPoints({
+          x,
+          y
+        })
+      }
+    }
+    // 斜率绝对值 > 1
+    else {
+      let d = 2 * b + a;
+      let d1 = 2 * b;
+      let d2 = 2 * (a + b);
+      while (y < p1.y) {
+        y++
+        if (d < 0) {
+          d += d1
+        } else {
+          x++
+          d += d2
+        }
+        this.setPoints({
+          x,
+          y
+        })
+      }
+    }
+  }
+  ...
+}
+```
+
+<img src="06.png">
+
+<全文结束>

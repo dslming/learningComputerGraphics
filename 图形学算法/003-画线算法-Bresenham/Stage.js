@@ -40,8 +40,7 @@ export class Stage {
   initStage() {
     // 相机
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
-    this.camera.position.set(0, 320, 0);
-    this.camera.rotation.set(-1.75, 0, 0);
+    this.camera.position.set(0, 0, 60);
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
     this.camera.name = "camera"
 
@@ -99,20 +98,21 @@ export class Stage {
   }
 
   /**
-   * 绘制参考平面 YOZ
+   * 绘制参考平面 XOY
    * 中心是原点坐标,每个格子表示20
    *
+   * Y
+   * /\
+   * |
+   * |
+   * |
+   * |
+   * |---------------> X
    * O
-   * |---------------> Y
-   * |
-   * |
-   * |
-   * |
-   * \/
-   * Z
+   *
    */
   addPlan() {
-    let length = 200
+    let length = 100
     let geometry = new THREE.Geometry();/* 简单基础几何 */
     let lineMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });/* 基础线材质 */
 
@@ -120,17 +120,17 @@ export class Stage {
     geometry.vertices.push(new THREE.Vector3(length / 2, 0, 0)); /* 顶点( 100, 0, 0) */
 
     /* 循环创建线段 */
-    for (let i = 0; i <= length / 10; i++) {
+    for (let i = 0; i <= length / 1; i++) {
       /* 横向线段 */
       let lineX = new THREE.Line(geometry, lineMaterial);
-      lineX.position.z = (i * 10) - length / 2;
+      lineX.position.y = (i * 1) - length / 2;
       lineX.name = "lineX"
       this.scene.add(lineX);
 
       /* 纵向线段 */
       let lineY = new THREE.Line(geometry, lineMaterial);
-      lineY.rotation.y = 0.5 * Math.PI;
-      lineY.position.x = (i * 10) - length / 2;
+      lineY.rotation.z = -0.5 * Math.PI;
+      lineY.position.x = (i * 1) - length / 2;
       lineY.name = "lineY"
       this.scene.add(lineY);
     }

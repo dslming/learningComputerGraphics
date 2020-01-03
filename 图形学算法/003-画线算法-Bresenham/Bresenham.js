@@ -1,6 +1,4 @@
 const THREE = window.THREE
-let isDrawing = false
-
 /**
  * 二维点, 在平面 XOY
  */
@@ -11,38 +9,39 @@ export class Point {
   }
 }
 
-export class Midpoint  {
+export class Bresenham {
   constructor(scene) {
     this.scene = scene
   }
 
   addLinePoints(p0 = { x: 0, y: 0 }, p1 = { x: 0, y: 0 }) {
+    let x = p0.x
+    let y = p0.y
     let dx = p1.x - p0.x
     let dy = p1.y - p0.y
     let k = dy / dx
-    let y = p0.y
+    let e = -0.5
 
-    for (let x = p0.x; x <= p1.x; x += 1) {
-      let tempPoint
-      if (Math.abs(k) > 1) {
-        tempPoint = new THREE.Vector3(x, parseInt(y + 0.5), 0)
-      } else {
-        tempPoint = new THREE.Vector3(parseInt(x + 0.5), y, 0)
+    for (let i = 0; i <= dx; i++) {
+      this.setPoints({ x, y })
+      x += 1
+      e += k
+      if (e >= 0) {
+        y++
+        e = e - 1
       }
-      this.setPoints(tempPoint)
-      y = y + k
     }
   }
 
-  setPoints(vector) {
+  setPoints(v) {
     console.error({
-      x: vector.x,
-      y: vector.y,
+      x: v.x,
+      y: v.y,
     });
-
+    let vector = new THREE.Vector3(v.x, v.y, 0)
     let pointsGeometry = new THREE.Geometry();
     pointsGeometry.vertices.push(vector);
-    let pointsMaterial = new THREE.PointsMaterial({ color: 0xff0000, size: 5 });
+    let pointsMaterial = new THREE.PointsMaterial({ color: 0xff0000, size: 1 });
     let points = new THREE.Points(pointsGeometry, pointsMaterial);
     points.name = "point"
     this.scene.add(points);
