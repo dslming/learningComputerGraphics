@@ -20,25 +20,6 @@ class App {
     let stage = new Stage()
     let mp = new ScanLine()
 
-    // let polyPoints = [
-    //   {
-    //     x: 0,
-    //     y: 0,
-    //   },
-    //   {
-    //     x: 0,
-    //     y: 5,
-    //   },
-    //   {
-    //     x: 5,
-    //     y: 5,
-    //   },
-    //   {
-    //     x: 5,
-    //     y: 0,
-    //   }
-    // ]
-
     let polyPoints = [
       {
         x: 0,
@@ -56,14 +37,6 @@ class App {
         x: 10,
         y: 20,
       },
-      // {
-      //   x: 11,
-      //   y: 13,
-      // },
-      // {
-      //   x: 13,
-      //   y: 7,
-      // }
     ]
 
     // let polyPoints = [
