@@ -96,7 +96,7 @@ class App {
 
     drawRectPoint(stage.scene, polyPoints)
     let p = mp.polyfill(polyPoints)
-    console.error(p);
+    // console.error(p);
 
     p.forEach(point => {
       stage.drawPoints(point)

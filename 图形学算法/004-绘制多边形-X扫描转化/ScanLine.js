@@ -1,7 +1,11 @@
+/**
+ * 感谢: https://github.com/fuWenMr/computeGraphicsTry
+ */
+
+
 // 新边表节点,存放所有边的信息
 class NetNode {
-  constructor(obj) {
-    let { p1, p2, k, maxY, minY, minX, dx } = obj
+  constructor({ p1, p2, k, maxY, minY, minX, dx }) {
     this.p1 = p1
     this.p2 = p2
     this.k = k
@@ -14,8 +18,7 @@ class NetNode {
 
 // 活性表节点
 class AetNode {
-  constructor(obj) {
-    let { x, dx, maxY, next } = obj
+  constructor({ x, dx, maxY, next }) {
     this.x = x
     this.dx = dx
     this.maxY = maxY
@@ -39,9 +42,6 @@ function deepCopy(obj) {
 
 // 直线扫描算法
 export class ScanLine {
-  constructor() {
-  }
-
   /**
    *
    * @param {*} polyPoints 多边形用顶点描述
@@ -60,7 +60,6 @@ export class ScanLine {
 
     // 建立新边表 neT, 存放所有边的信息
     const neT = this.getLinesByPoints(polyPoints)
-    // console.error(neT);
 
     // 建立活性边表的第一条数据y=minY 放入 aeT
     let currentY = minY
@@ -75,8 +74,8 @@ export class ScanLine {
       ae = ae.next;
       currentIndex++;
     }
-    console.error("net", deepCopy(neT));
-    console.error("aet", deepCopy(aeT));
+    // console.error("net", deepCopy(neT));
+    // console.error("aet", deepCopy(aeT));
 
     // 开始扫描转换, minY ~ maxY
     for (; currentY <= maxY; currentY++) {
@@ -86,32 +85,34 @@ export class ScanLine {
 
       do {
         ae = aeLast.next;
-        console.error("in-aeLast", currentY, deepCopy(aeLast));
-        console.error("in-ae", currentY, deepCopy(ae));
+        // console.error("in-aeLast", currentY, deepCopy(aeLast));
+        // console.error("in-ae", currentY, deepCopy(ae));
 
         activeXs.push(ae.x);
         ae.x += ae.dx;
-        // console.log('ae',ae.x,ae.dx);
-        //结束边
+        // 结束边
         if (ae.maxY == currentY) {
           aeLast.next = ae.next;
         }
         else {
           aeLast = ae;
         }
-        console.error("out-aeLast", currentY, deepCopy(aeLast));
-        console.error("out-ae", currentY, deepCopy(ae));
+        // console.error("out-aeLast", currentY, deepCopy(aeLast));
+        // console.error("out-ae", currentY, deepCopy(ae));
       }
       while (ae.next)
 
-
+      // 得到所有的x
       activeXs = this.xHandler(activeXs);
+
       for (let i = 0; i < activeXs.length; i += 2) {
         res = res.concat(this.getAllPointsByX(activeXs[i], activeXs[i + 1], currentY));
       }
+      // 到达新边
+
       while (neT[currentIndex] && neT[currentIndex].minY == currentY) {
         let { minX, dx, maxY } = neT[currentIndex];
-        aeLast.next = { x: minX, dx, maxY, next: null };
+        aeLast.next = new AetNode({ x: minX, dx, maxY, next: null })
         aeLast = aeLast.next;
         currentIndex++;
       }
@@ -160,7 +161,12 @@ export class ScanLine {
     lines.sort((l1, l2) => {
       return l1.minY - l2.minY;
     });
-    return lines;
+
+    let retNew = []
+    retNew = lines.map(line => {
+      return new NetNode(line)
+    });
+    return retNew;
   };
 
   xHandler(xs) {
