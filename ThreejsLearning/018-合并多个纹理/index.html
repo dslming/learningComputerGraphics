@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Document</title>
+	</head>
+
+	<body>
+
+	</body>
+	<script src="./mode.js"></script>
+	<script src="https://threejs.org/build/three.min.js"></script>
+	<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+	<script id="vertex_shader" type="x-shader/x-vertex">
+varying vec2 vUv;
+varying vec3 vNormal;
+varying vec3 vViewPosition;
+
+void main() {
+
+	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+
+	vUv = uv;
+	vNormal = normalize( normalMatrix * normal );
+	vViewPosition = -mvPosition.xyz;
+
+	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+}
+
+</script>
+
+	<script id="fragment_shader" type="x-shader/x-fragment">
+
+uniform sampler2D texture;
+uniform sampler2D texture2;
+uniform vec3 color;
+varying vec2 vUv;
+varying vec3 vNormal;
+varying vec3 vViewPosition;
+
+void main() {
+  vec4 tc = vec4(color.r, color.g, color.b, 1.0 );
+	vec4 tColor = texture2D( texture, vec2(vUv.x*.5,vUv.y*.5) );
+	vec4 tColor2 = texture2D( texture2, vUv*1.0 );
+	if(vUv.x > 0.1 && vUv.y > 0.1) {
+		gl_FragColor = tColor;
+	} else {
+		gl_FragColor = tColor2;
+	}
+  // float c = min(mask_a.r + mask_b.r,1.0);
+	// hack in a fake pointlight at camera location, plus ambient
+	// vec3 tColor = normalize( vNormal );
+	// vec3 tColor2 = normalize( vViewPosition );
+
+	// float dotProduct = max( dot( normal, lightDir ), 0.0 ) + 0.2;
+
+  // gl_FragColor = vec4( mix( tColor.rgb, tColor2.rgb, tColor2.a ), 1.0 );
+
+    // vec4 tColor2 = yello - tc * yello.a;
+    // // gl_FragColor = vec4( mix( tColor.rgb, mix_c.xyz, tColor2.a ), 1.0 ) * dotProduct;
+    // gl_FragColor = vec4( tColor2.rgb+greenCircle.rgb, 1.0 );
+		// gl_FragColor = greenCircle;
+		// vec4 mix_c = yello + tc * yello.a;
+    // gl_FragColor = vec4( mix( greenCircle.rgb, mix_c.xyz, greenCircle.a ), 1.0 );
+
+
+}
+
+</script>
+	<script src="./App.js"></script>
+
+</html>
