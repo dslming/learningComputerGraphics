@@ -92,6 +92,11 @@ export class Stage {
     requestAnimationFrame(this.animate);
     this.renderer.render(this.scene, this.camera);
     this.cb && this.cb()
+    this.camera.updateMatrixWorld()
+
+    if (this.cameraHelper) {
+      this.cameraHelper.update()
+    }
     // this.control && this.control.update()
   }
 
@@ -216,5 +221,11 @@ export class Stage {
     let points = new THREE.Points(pointsGeometry, pointsMaterial);
     points.name = "point"
     this.scene.add(points);
+  }
+
+  addCameraHelper() {
+    this.cameraHelper = new THREE.CameraHelper(this.camera)
+    this.cameraHelper.name = "cameraHelper"
+    this.scene.add(this.cameraHelper)
   }
 }

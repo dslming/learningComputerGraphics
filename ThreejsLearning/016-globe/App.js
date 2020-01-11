@@ -12,6 +12,7 @@ class App {
     this.animate = this.animate.bind(this);
 
     this.initStage()
+    this.addCameraHelper()
     this.addObj()
 
     window.addEventListener('resize', this.onWindowResize, false);
@@ -88,6 +89,12 @@ class App {
     requestAnimationFrame(this.animate);
     // this.uniforms.u_time.value += 0.05;
     this.renderer.render(this.scene, this.camera);
+    this.cameraHelper && this.cameraHelper.update()
+  }
+
+  addCameraHelper() {
+    this.cameraHelper = new THREE.CameraHelper(this.camera)
+    this.scene.add(this.cameraHelper)
   }
 }
 

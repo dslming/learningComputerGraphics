@@ -12,6 +12,7 @@ class App {
       yMin: 10
     }
     stage.addPlanBox(size)
+    stage.addCameraHelper()
     let cs = new CohenSutherland(size)
     this.drawLine(cs, stage)
     stage.run()

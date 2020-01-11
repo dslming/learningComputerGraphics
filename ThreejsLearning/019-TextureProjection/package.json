@@ -1,41 +1,33 @@
 {
-  "name": "019-PlayingTextureProjection",
-  "version": "1.0.0",
-  "description": "",
+  "name": "019-vue",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "build": "webpack",
-    "server": "node server.js"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "controls-gui": "^1.2.2",
+    "controls-state": "^1.1.1",
+    "core-js": "^3.4.4",
+    "datauritoblob": "^1.0.0",
+    "detect-gpu": "^1.1.4",
+    "image-promise": "^7.0.0",
+    "orbit-controls": "^1.2.4",
+    "p-map": "^3.0.0",
+    "pretty-ms": "^5.1.0",
+    "stats.js": "^0.17.0",
+    "three": "^0.112.1",
+    "touches": "^1.2.2",
+    "vue": "^2.6.10"
   },
   "devDependencies": {
-    "babel-cli": "^6.9.0",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-transform-regenerator": "^6.9.0",
-    "babel-preset-es2015": "^6.9.0",
-    "bake-cli": "^0.1.6",
-    "eslint": "^2.10.2",
-    "eslint-config-standard": "^5.3.1",
-    "eslint-plugin-promise": "^1.1.0",
-    "eslint-plugin-standard": "^1.3.2",
-    "express": "^4.17.1",
-    "html-webpack-plugin": "^3.2.0",
-    "mocha": "^2.5.2",
-    "standard-version": "^2.2.1",
-    "watchd": "github:mklabs/watchd",
-    "webpack": "^4.41.5",
-    "webpack-browser-plugin": "^1.0.20",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-middleware": "^3.7.2"
+    "@vue/cli-plugin-babel": "^4.1.0",
+    "@vue/cli-service": "^4.1.0",
+    "vue-template-compiler": "^2.6.10"
   },
-  "private": true,
-  "dependencies": {
-    "clean-webpack-plugin": "^3.0.0",
-    "html-webpack-plugin": "^3.2.0",
-    "lodash": "^4.17.15",
-    "open-browser-webpack-plugin": "^0.0.5",
-    "webpack-dev-server": "^3.10.1",
-    "webpack-merge": "^4.2.2"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
 }
