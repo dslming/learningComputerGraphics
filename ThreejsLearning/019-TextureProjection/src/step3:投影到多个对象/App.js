@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import { random } from 'lodash'
-import { Stage } from './Stage.js'
-import { ProjectedMaterial, project } from './ProjectedMaterial.js'
-import assets from './lib/AssetManager.js'
+import { Stage } from './Stage'
+import { ProjectedMaterial, project } from './ProjectedMaterial'
+import assets from './lib/AssetManager'
 window.lm = {}
 
 class App {

@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-export class ProjectedMaterial extends THREE.ShaderMaterial {
+export default class ProjectedMaterial extends THREE.ShaderMaterial {
   constructor({ camera, texture, color = 0xffffff, ...options }) {
     if (!texture || !texture.isTexture) {
       throw new Error('Invalid texture passed to the ProjectedMaterial')
@@ -24,7 +24,7 @@ export class ProjectedMaterial extends THREE.ShaderMaterial {
     // 模型矩阵
     const modelMatrixCamera = camera.matrixWorld.clone()
     const projPosition = camera.position.clone()
-    // console.error(modelMatrixCamera, projPosition)
+    console.error(modelMatrixCamera, projPosition)
 
     super({
       ...options,
@@ -34,7 +34,6 @@ export class ProjectedMaterial extends THREE.ShaderMaterial {
         viewMatrixCamera: { type: 'm4', value: viewMatrixCamera },
         projectionMatrixCamera: { type: 'm4', value: projectionMatrixCamera },
         modelMatrixCamera: { type: 'mat4', value: modelMatrixCamera },
-        savedModelMatrix: { type: 'mat4', value: new THREE.Matrix4() },
         projPosition: { type: 'v3', value: projPosition },
       },
 
@@ -42,7 +41,6 @@ export class ProjectedMaterial extends THREE.ShaderMaterial {
           uniform mat4 viewMatrixCamera;
           uniform mat4 projectionMatrixCamera;
           uniform mat4 modelMatrixCamera;
-          uniform mat4 savedModelMatrix;
 
           varying vec4 vWorldPosition;
           varying vec3 vNormal;
@@ -50,9 +48,23 @@ export class ProjectedMaterial extends THREE.ShaderMaterial {
 
 
           void main() {
-            vNormal = mat3(savedModelMatrix) * normal;
-            vWorldPosition = savedModelMatrix * vec4(position, 1.0);
+            // in: modelMatrix,模型的世界坐标矩阵
+            // in: normal,顶点法向量
+            // out: 模型法线向量
+            vNormal = mat3(modelMatrix) * normal;
+
+            // in: position,顶点局部坐标
+            // in: modelMatrix,模型的世界坐标矩阵
+            // out: vWorldPosition,模型世界坐标
+            vWorldPosition = modelMatrix * vec4(position, 1.0);
+
+            // in: projectionMatrixCamera,相机的投影矩阵
+            // in: viewMatrixCamera,视图模型矩阵
+            // in: position,顶点局部坐标
+            // out: vTexCoords,模型在相机上的投影
             vTexCoords = projectionMatrixCamera * viewMatrixCamera * vWorldPosition;
+
+            // 相机的位置
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
           }
         `,
@@ -92,17 +104,4 @@ export class ProjectedMaterial extends THREE.ShaderMaterial {
 
     this.isProjectedMaterial = true
   }
-}
-
-export function project(mesh) {
-  if (!mesh.material.isProjectedMaterial) {
-    throw new Error(`The mesh material must be a ProjectedMaterial`)
-  }
-
-  // make sure the matrix is updated
-  mesh.updateMatrixWorld()
-
-  // we save the object model matrix so it's projected relative
-  // to that position, like a snapshot
-  mesh.material.uniforms.savedModelMatrix.value.copy(mesh.matrixWorld)
 }

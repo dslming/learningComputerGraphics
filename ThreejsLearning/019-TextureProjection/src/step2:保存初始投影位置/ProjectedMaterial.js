@@ -24,7 +24,7 @@ export class ProjectedMaterial extends THREE.ShaderMaterial {
     // 模型矩阵
     const modelMatrixCamera = camera.matrixWorld.clone()
     const projPosition = camera.position.clone()
-    // console.error(modelMatrixCamera, projPosition)
+    console.error(modelMatrixCamera, projPosition)
 
     super({
       ...options,

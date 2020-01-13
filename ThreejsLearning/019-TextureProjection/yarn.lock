@@ -1182,6 +1182,11 @@
   resolved "https://registry.npm.taobao.org/@xtuc/long/download/@xtuc/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha1-0pHGpOl5ibXGHZrPOWrk/hM6cY0=
 
+abs-svg-path@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.npm.taobao.org/abs-svg-path/download/abs-svg-path-0.1.1.tgz#df601c8e8d2ba10d4a76d625e236a9a39c2723bf"
+  integrity sha1-32Acjo0roQ1KdtYl4japo5wnI78=
+
 accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.7:
   version "1.3.7"
   resolved "https://registry.npm.taobao.org/accepts/download/accepts-1.3.7.tgz#531bc726517a3b2b41f850021c6cc15eaab507cd"
@@ -1199,6 +1204,11 @@ acorn@^6.0.7, acorn@^6.1.1, acorn@^6.2.1:
   version "6.4.0"
   resolved "https://registry.npm.taobao.org/acorn/download/acorn-6.4.0.tgz#b659d2ffbafa24baf5db1cdbb2c94a983ecd2784"
   integrity sha1-tlnS/7r6JLr12xzbsslKmD7NJ4Q=
+
+adaptive-bezier-curve@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npm.taobao.org/adaptive-bezier-curve/download/adaptive-bezier-curve-1.0.3.tgz#477577abe87d7280d46ca41649f6c22646fe8227"
+  integrity sha1-R3V3q+h9coDUbKQWSfbCJkb+gic=
 
 address@^1.1.2:
   version "1.1.2"
@@ -1233,10 +1243,25 @@ ajv@^6.1.0, ajv@^6.10.2, ajv@^6.5.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+almost-equal@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.npm.taobao.org/almost-equal/download/almost-equal-0.0.0.tgz#e7a5a6b3457b67c83ee0044f9a8d07637355f02d"
+  integrity sha1-56Wms0V7Z8g+4ARPmo0HY3NV8C0=
+
+almost-equal@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/almost-equal/download/almost-equal-1.1.0.tgz#f851c631138757994276aa2efbe8dfa3066cccdd"
+  integrity sha1-+FHGMROHV5lCdqou++jfowZszN0=
+
 alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/alphanum-sort/download/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
+
+an-array@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/an-array/download/an-array-1.0.0.tgz#c125a5bb8257778e35f4b4f6aa9c7d0fa9e42665"
+  integrity sha1-wSWlu4JXd4419LT2qpx9D6nkJmU=
 
 ansi-colors@^3.0.0:
   version "3.2.4"
@@ -1332,6 +1357,14 @@ arr-union@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npm.taobao.org/arr-union/download/arr-union-3.1.0.tgz#e39b09aea9def866a8f206e288af63919bae39c4"
   integrity sha1-45sJrqne+Gao8gbiiK9jkZuuOcQ=
+
+array-almost-equal@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/array-almost-equal/download/array-almost-equal-1.0.0.tgz#43c54ff435042e9cbfa4212ac49ada5fc7359fc5"
+  integrity sha1-Q8VP9DUELpy/pCEqxJraX8c1n8U=
+  dependencies:
+    almost-equal "0.0.0"
+    an-array "^1.0.0"
 
 array-flatten@1.1.1:
   version "1.1.1"
@@ -1836,6 +1869,31 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001012, caniuse-lite@^1.0.30001017:
   resolved "https://registry.npm.taobao.org/caniuse-lite/download/caniuse-lite-1.0.30001019.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcaniuse-lite%2Fdownload%2Fcaniuse-lite-1.0.30001019.tgz#857e3fccaad2b2feb3f1f6d8a8f62d747ea648e1"
   integrity sha1-hX4/zKrSsv6z8fbYqPYtdH6mSOE=
 
+canvas-sketch-util@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.npm.taobao.org/canvas-sketch-util/download/canvas-sketch-util-1.10.0.tgz#93d11aa378f8991ed0837d1bf8ea738132f41f1e"
+  integrity sha1-k9Eao3j4mR7Qg30b+OpzgTL0Hx4=
+  dependencies:
+    abs-svg-path "^0.1.1"
+    almost-equal "^1.1.0"
+    array-almost-equal "^1.0.0"
+    clone "^2.1.2"
+    color-luminance "^2.1.0"
+    convert-length "^1.0.1"
+    d3-path "^1.0.8"
+    defined "^1.0.0"
+    float-hsl2rgb "^1.0.2"
+    float-rgb2hsl "^1.0.1"
+    lineclip "^1.1.5"
+    normalize-svg-path "^1.0.1"
+    parse-color "^1.0.0"
+    parse-svg-path "^0.1.2"
+    primitive-quad "^2.0.0"
+    regl "^1.3.7"
+    seed-random "^2.2.0"
+    simplex-noise "^2.4.0"
+    svg-path-contours "^2.0.0"
+
 case-sensitive-paths-webpack-plugin@^2.2.0:
   version "2.2.0"
   resolved "https://registry.npm.taobao.org/case-sensitive-paths-webpack-plugin/download/case-sensitive-paths-webpack-plugin-2.2.0.tgz#3371ef6365ef9c25fa4b81c16ace0e9c7dc58c3e"
@@ -2009,6 +2067,11 @@ clone@^1.0.2:
   resolved "https://registry.npm.taobao.org/clone/download/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
 
+clone@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.npm.taobao.org/clone/download/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
+  integrity sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
+
 coa@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npm.taobao.org/coa/download/coa-2.0.2.tgz#43f6c21151b4ef2bf57187db0d73de229e3e7ec3"
@@ -2044,6 +2107,16 @@ color-convert@^2.0.1:
   integrity sha1-ctOmjVmMm9s68q0ehPIdiWq9TeM=
   dependencies:
     color-name "~1.1.4"
+
+color-convert@~0.5.0:
+  version "0.5.3"
+  resolved "https://registry.npm.taobao.org/color-convert/download/color-convert-0.5.3.tgz?cache=0&sync_timestamp=1566248756583&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcolor-convert%2Fdownload%2Fcolor-convert-0.5.3.tgz#bdb6c69ce660fadffe0b0007cc447e1b9f7282bd"
+  integrity sha1-vbbGnOZg+t/+CwAHzER+G59ygr0=
+
+color-luminance@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npm.taobao.org/color-luminance/download/color-luminance-2.1.0.tgz#58ff2ebd32b52d07f5378eefe5a0e79d6b318ad7"
+  integrity sha1-WP8uvTK1LQf1N47v5aDnnWsxitc=
 
 color-name@1.1.3:
   version "1.1.3"
@@ -2189,6 +2262,13 @@ controls-state@^1.1.1:
     event-emitter "^0.3.5"
     global "^4.3.2"
     raf "^3.4.1"
+
+convert-length@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/convert-length/download/convert-length-1.0.1.tgz#b66c7dc1f7d181916667c977f57be2f1eb17c1b7"
+  integrity sha1-tmx9wffRgZFmZ8l39Xvi8esXwbc=
+  dependencies:
+    defined "^1.0.0"
 
 convert-source-map@^1.7.0:
   version "1.7.0"
@@ -2512,6 +2592,11 @@ cyclist@^1.0.1:
   resolved "https://registry.npm.taobao.org/cyclist/download/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
+d3-path@^1.0.8:
+  version "1.0.9"
+  resolved "https://registry.npm.taobao.org/d3-path/download/d3-path-1.0.9.tgz#48c050bb1fe8c262493a8caf5524e3e9591701cf"
+  integrity sha1-SMBQux/owmJJOoyvVSTj6VkXAc8=
+
 d@1, d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/d/download/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"
@@ -2824,6 +2909,11 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
+
+eases@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.npm.taobao.org/eases/download/eases-1.0.8.tgz#f1f5069a6b6ed2ea510f9c6110398d63efe9aee6"
+  integrity sha1-8fUGmmtu0upRD5xhEDmNY+/pruY=
 
 easy-stack@^1.0.0:
   version "1.0.0"
@@ -3316,6 +3406,16 @@ find-up@^4.0.0, find-up@^4.1.0:
   dependencies:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
+
+float-hsl2rgb@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npm.taobao.org/float-hsl2rgb/download/float-hsl2rgb-1.0.2.tgz#ecf3509c40ac6567c96a204622b0c4c4bf43c8a1"
+  integrity sha1-7PNQnECsZWfJaiBGIrDExL9DyKE=
+
+float-rgb2hsl@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/float-rgb2hsl/download/float-rgb2hsl-1.0.1.tgz#8efeaa0fc726e53363a79bf3f636082055c10c0e"
+  integrity sha1-jv6qD8cm5TNjp5vz9jYIIFXBDA4=
 
 flush-write-stream@^1.0.0:
   version "1.1.1"
@@ -4478,6 +4578,11 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
+lineclip@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.npm.taobao.org/lineclip/download/lineclip-1.1.5.tgz#2bf26067d94354feabf91e42768236db5616fd13"
+  integrity sha1-K/JgZ9lDVP6r+R5CdoI221YW/RM=
+
 lines-and-columns@^1.1.6:
   version "1.1.6"
   resolved "https://registry.npm.taobao.org/lines-and-columns/download/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
@@ -4873,6 +4978,11 @@ mkdirp@^0.5.1, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
+moore@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/moore/download/moore-1.0.0.tgz#1d2b298c32cfd330db0fe81a0b5bac319fd9eb65"
+  integrity sha1-HSspjDLP0zDbD+gaC1usMZ/Z62U=
+
 mouse-event-offset@^3.0.2:
   version "3.0.2"
   resolved "https://registry.npm.taobao.org/mouse-event-offset/download/mouse-event-offset-3.0.2.tgz#dfd86a6e248c6ba8cad53b905d5037a2063e9984"
@@ -5061,6 +5171,18 @@ normalize-range@^0.1.2:
   version "0.1.2"
   resolved "https://registry.npm.taobao.org/normalize-range/download/normalize-range-0.1.2.tgz#2d10c06bdfd312ea9777695a4d28439456b75942"
   integrity sha1-LRDAa9/TEuqXd2laTShDlFa3WUI=
+
+normalize-svg-path@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npm.taobao.org/normalize-svg-path/download/normalize-svg-path-0.1.0.tgz#456360e60ece75fbef7b5d7e160480e7ffd16fe5"
+  integrity sha1-RWNg5g7Odfvve11+FgSA5//Rb+U=
+
+normalize-svg-path@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/normalize-svg-path/download/normalize-svg-path-1.0.1.tgz#6f729ad6b70bb4ca4eff2fe4b107489efe1d56fe"
+  integrity sha1-b3Ka1rcLtMpO/y/ksQdInv4dVv4=
+  dependencies:
+    svg-arc-to-cubic-bezier "^3.0.0"
 
 normalize-url@1.9.1:
   version "1.9.1"
@@ -5394,6 +5516,13 @@ parse-asn1@^5.0.0:
     pbkdf2 "^3.0.3"
     safe-buffer "^5.1.1"
 
+parse-color@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/parse-color/download/parse-color-1.0.0.tgz#7b748b95a83f03f16a94f535e52d7f3d94658619"
+  integrity sha1-e3SLlag/A/FqlPU15S1/PZRlhhk=
+  dependencies:
+    color-convert "~0.5.0"
+
 parse-json@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npm.taobao.org/parse-json/download/parse-json-4.0.0.tgz#be35f5425be1f7f6c747184f98a788cb99477ee0"
@@ -5416,6 +5545,11 @@ parse-ms@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npm.taobao.org/parse-ms/download/parse-ms-2.1.0.tgz#348565a753d4391fa524029956b172cb7753097d"
   integrity sha1-NIVlp1PUOR+lJAKZVrFyy3dTCX0=
+
+parse-svg-path@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npm.taobao.org/parse-svg-path/download/parse-svg-path-0.1.2.tgz#7a7ec0d1eb06fa5325c7d3e009b859a09b5d49eb"
+  integrity sha1-en7A0esG+lMlx9PgCbhZoJtdSes=
 
 parse-unit@^1.0.1:
   version "1.0.1"
@@ -5557,6 +5691,13 @@ pkg-dir@^4.1.0:
   integrity sha1-8JkTPfft5CLoHR2ESCcO6z5CYfM=
   dependencies:
     find-up "^4.0.0"
+
+poisson-disk-sampling@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.npm.taobao.org/poisson-disk-sampling/download/poisson-disk-sampling-1.0.6.tgz#793e649d6bb638456627134039eafdbb344fb21d"
+  integrity sha1-eT5knWu2OEVmJxNAOer9uzRPsh0=
+  dependencies:
+    moore "~1.0.0"
 
 portfinder@^1.0.25:
   version "1.0.25"
@@ -5947,6 +6088,11 @@ pretty-ms@^5.1.0:
   dependencies:
     parse-ms "^2.1.0"
 
+primitive-quad@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/primitive-quad/download/primitive-quad-2.0.0.tgz#c20993e4f9600238926bb500e529053043ef8aeb"
+  integrity sha1-wgmT5PlgAjiSa7UA5SkFMEPvius=
+
 private@^0.1.6:
   version "0.1.8"
   resolved "https://registry.npm.taobao.org/private/download/private-0.1.8.tgz#2381edb3689f7a53d653190060fcf822d2f368ff"
@@ -6230,6 +6376,11 @@ regjsparser@^0.6.0:
   dependencies:
     jsesc "~0.5.0"
 
+regl@^1.3.7:
+  version "1.3.13"
+  resolved "https://registry.npm.taobao.org/regl/download/regl-1.3.13.tgz#c376bfa6477995a9be9cd21495a0c9beb9b2f3af"
+  integrity sha1-w3a/pkd5lam+nNIUlaDJvrmy868=
+
 relateurl@0.2.x:
   version "0.2.7"
   resolved "https://registry.npm.taobao.org/relateurl/download/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
@@ -6446,6 +6597,11 @@ schema-utils@^2.0.0, schema-utils@^2.5.0, schema-utils@^2.6.0, schema-utils@^2.6
     ajv "^6.10.2"
     ajv-keywords "^3.4.1"
 
+seed-random@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/seed-random/download/seed-random-2.2.0.tgz#2a9b19e250a817099231a5b99a4daf80b7fbed54"
+  integrity sha1-KpsZ4lCoFwmSMaW5mk2vgLf77VQ=
+
 select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/select-hose/download/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
@@ -6603,6 +6759,11 @@ simple-swizzle@^0.2.2:
   integrity sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
   dependencies:
     is-arrayish "^0.3.1"
+
+simplex-noise@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.npm.taobao.org/simplex-noise/download/simplex-noise-2.4.0.tgz#81b3458fb22dccc3bc8dd9a977c73797f86f523a"
+  integrity sha1-gbNFj7ItzMO8jdmpd8c3l/hvUjo=
 
 slash@^1.0.0:
   version "1.0.0"
@@ -7009,6 +7170,21 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
+svg-arc-to-cubic-bezier@^3.0.0:
+  version "3.2.0"
+  resolved "https://registry.npm.taobao.org/svg-arc-to-cubic-bezier/download/svg-arc-to-cubic-bezier-3.2.0.tgz#390c450035ae1c4a0104d90650304c3bc814abe6"
+  integrity sha1-OQxFADWuHEoBBNkGUDBMO8gUq+Y=
+
+svg-path-contours@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/svg-path-contours/download/svg-path-contours-2.0.0.tgz#c76a129429db05eb6d7b61e4d1c58d114a8938a2"
+  integrity sha1-x2oSlCnbBette2Hk0cWNEUqJOKI=
+  dependencies:
+    abs-svg-path "^0.1.1"
+    adaptive-bezier-curve "^1.0.3"
+    normalize-svg-path "^0.1.0"
+    vec2-copy "^1.0.0"
+
 svg-tags@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npm.taobao.org/svg-tags/download/svg-tags-1.0.0.tgz#58f71cee3bd519b59d4b2a843b6c7de64ac04764"
@@ -7098,6 +7274,11 @@ thread-loader@^2.1.3:
     loader-runner "^2.3.1"
     loader-utils "^1.1.0"
     neo-async "^2.6.0"
+
+three-projected-material@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/three-projected-material/download/three-projected-material-1.1.0.tgz#1f01b9dec0d99d987067effb6d42abf4635242d0"
+  integrity sha1-HwG53sDZnZhwZ+/7bUKr9GNSQtA=
 
 three@^0.112.1:
   version "0.112.1"
@@ -7471,6 +7652,11 @@ vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/vary/download/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+
+vec2-copy@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/vec2-copy/download/vec2-copy-1.0.0.tgz#c6eec1d8dad54625194e5f71f8433b62d2f20a7a"
+  integrity sha1-xu7B2NrVRiUZTl9x+EM7YtLyCno=
 
 vendors@^1.0.0:
   version "1.0.3"
