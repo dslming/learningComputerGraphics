@@ -72,6 +72,7 @@ export default class ProjectedMaterial extends THREE.ShaderMaterial {
       fragmentShader: `
         uniform vec3 color;
         uniform sampler2D texture;
+        // projPosition: 相机的位置
         uniform vec3 projPosition;
 
         varying vec3 vNormal;
@@ -89,13 +90,17 @@ export default class ProjectedMaterial extends THREE.ShaderMaterial {
           // 纹理采样,投影坐标作为纹理采样坐标
           vec4 outColor = texture2D(texture, uv);
 
-          // 这可以确保我们不在对象的背面也渲染纹理
+          // ------这可以确保我们不在对象的背面也渲染纹理 start --------
+          // in: projPosition,相机的位置
+          // in: vWorldPosition,目标物体的位置
+          // out: projectorDirection,投影方向,视点指向目标物体
           vec3 projectorDirection = normalize(projPosition - vWorldPosition.xyz);
           // 通过查看法线和相机方向的点积来检查人眼是否真的朝向相机
           float dotProduct = dot(vNormal, projectorDirection);
           if (dotProduct < 0.0) {
             outColor = vec4(color, 1.0);
           }
+          // ------这可以确保我们不在对象的背面也渲染纹理 end --------
 
           gl_FragColor = outColor;
         }
