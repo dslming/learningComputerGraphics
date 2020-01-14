@@ -41,10 +41,10 @@ export class Stage {
     this.renderer.setSize(vW, vH, false);
     this.containerEle.appendChild(this.renderer.domElement);
     // 相机
-    this.camera = new THREE.PerspectiveCamera(45, this.containerEle.clientWidth / this.containerEle.clientHeight, 0.1, 2000);
-    // this.camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000)
+    // this.camera = new THREE.PerspectiveCamera(45, this.containerEle.clientWidth / this.containerEle.clientHeight, 10, 2000);
+    this.camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000)
     // this.camera.position.set(-1, 1.2, 1)
-    this.camera.position.set(0, 0, 100)
+    this.camera.position.set(0, 0, 50)
     this.camera.lookAt(0, 0, 0)
 
     this.camera.name = "camera";
