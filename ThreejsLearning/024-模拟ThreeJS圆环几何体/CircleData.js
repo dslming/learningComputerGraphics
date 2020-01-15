@@ -3,7 +3,7 @@ import { Vector2 } from './lib/Vector2.js';
 /**
  * 圆形平面
  */
-export default class CircleGeometry {
+export default class CircleData {
   /**
   * radius: 扇形的半径，也是三角形的等边长度
   * segments: 组成扇形的三角形的数量
@@ -11,20 +11,11 @@ export default class CircleGeometry {
   * thetaLength: 扇形的圆心角，
   **/
   constructor({ radius, segments, thetaStart, thetaLength }) {
-    // 调用时的参数
-    this.parameters = {
-      radius: radius,
-      segments: segments,
-      thetaStart: thetaStart,
-      thetaLength: thetaLength
-    };
-    this.type = 'CircleBufferGeometry';
-
     // 参数检查
-    this.radius = radius || 1
-    this.segments = segments !== undefined ? Math.max(3, segments) : 8;
-    this.thetaStart = thetaStart !== undefined ? thetaStart : 0;
-    this.thetaLength !== undefined ? thetaLength : Math.PI * 2;
+    radius = radius || 1
+    segments = segments !== undefined ? Math.max(3, segments) : 8;
+    thetaStart = thetaStart !== undefined ? thetaStart : 0;
+    thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
 
     // ---- buffers ----
     // 顶点索引
@@ -45,7 +36,6 @@ export default class CircleGeometry {
     vertices.push(0, 0, 0);
     normals.push(0, 0, 1);
     uvs.push(0.5, 0.5);
-
     for (s = 0, i = 3; s <= segments; s++ , i += 3) {
       var segment = thetaStart + s / segments * thetaLength;
       // vertex
@@ -67,10 +57,23 @@ export default class CircleGeometry {
       indices.push(i, i + 1, 0);
     }
 
+    this.indices = indices
+    this.normal = normals
+    this.position = vertices
+    this.uvs = uvs
     // build geometry
     // this.setIndex(indices);
     // this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
     // this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
     // this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+  }
+
+  getData() {
+    return {
+      uvs: this.uvs,
+      indices: this.indices,
+      normal: this.normal,
+      position: this.position,
+    }
   }
 }
