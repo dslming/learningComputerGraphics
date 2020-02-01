@@ -16,8 +16,8 @@
 
 y_{i+1} &= kx_{i+1} + b \\
         &= k(x_i+\Delta x) + b \\
-        &= kx_i+b + \Delta x   \\
-        &= y_i + \Delta x
+        &= kx_i+b + k\Delta x   \\
+        &= y_i + k\Delta x
 
 \end{aligned}
 ```
