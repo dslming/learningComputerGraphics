@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./App.js"></script>
+    <style>
+      #canvas1,
+      #canvas2 {
+        display: none;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <canvas id="canvas1"></canvas>
+    <canvas id="canvas2"></canvas>
+    <canvas id="output"></canvas>
+    <script>
+      window.onload = () => {
+        let app = new App()
+        window.lm = app
+        app.setPosition({
+          x: 100,
+          y: 100,
+          w: 161,
+          h: 153
+        })
+
+        let canvas1 = document.querySelector("#canvas1")
+        let ctx1 = canvas1.getContext("2d")
+        let img1 = new Image()
+        img1.src = "./03.png"
+        img1.onload = function (e) {
+          let w = img1.width
+          let h = img1.height
+          canvas1.width = w
+          canvas1.height = h
+          ctx1.drawImage(img1, 0, 0, w, h)
+          let img1Data = ctx1.getImageData(0, 0, w, h)
+          // console.error(img1Data);
+          app.setData({
+            name: "img1",
+            data: img1Data
+          })
+        }
+
+        let canvas2 = document.querySelector("#canvas2")
+        let ctx2 = canvas1.getContext("2d")
+        let img2 = new Image()
+        img2.src = "./02.png"
+        img2.onload = function (e) {
+          let w = img2.width
+          let h = img2.height
+          canvas2.width = w
+          canvas2.height = h
+          ctx2.drawImage(img2, 0, 0, w, h)
+          let img2Data = ctx2.getImageData(0, 0, w, h)
+          // console.error(img2Data);
+          app.setData({
+            name: "img2",
+            data: img2Data
+          })
+        }
+
+        let output = document.querySelector("#output")
+        let ctx = output.getContext("2d")
+        let img = new Image()
+
+        app.setOverCb((data) => {
+          output.width = data.width
+          output.height = data.height
+          ctx.putImageData(data, 0, 0);
+        })
+        //
+      }
+    </script>
+  </body>
+
+</html>

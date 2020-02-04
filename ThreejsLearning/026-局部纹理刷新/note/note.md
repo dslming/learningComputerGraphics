@@ -4,8 +4,13 @@
 
 在版本 Three.js 113中, 纹理是.jpg格式的图片可以， .png格式不可以。
 
-App.js
+关键代码:
+```js
+var position = new THREE.Vector2(150, 150);
+renderer.copyTextureToTexture(position, dataTexture, that.srcTexturen);
+```
 
+App.js
 ```js
 class App {
   ...
