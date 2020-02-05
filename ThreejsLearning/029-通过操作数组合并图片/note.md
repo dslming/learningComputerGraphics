@@ -5,6 +5,8 @@
 canvas 或者 image 的数据都是 Uint8Array。
 ```js
 let imgData = ctx.getImageData(0, 0, w, h)
+// 或者通过canvas 创建图片
+var imgData = ctx.createImageData(100,100);
 ```
 
 每个像素由4个值构成, 分别对应RGBA。例如第一个像素的构成:
