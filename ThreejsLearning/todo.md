@@ -11,3 +11,8 @@
 [three-orbit-controls](https://github.com/Jam3/orbit-controls/tree/1e3a5bb59ad4ba9eea41a38bc8338c6a15bccb0e)
 
 [获取屏幕二维坐标](https://blog.csdn.net/weixin_33704591/article/details/91373271)
+
+运动模糊
+https://codepen.io/noelchan/pen/ExYLKPy
+https://www.clicktorelease.com/tmp/threejs/mblur/
+motion blur three.js
