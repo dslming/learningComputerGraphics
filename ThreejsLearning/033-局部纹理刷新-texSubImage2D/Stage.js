@@ -1,6 +1,7 @@
 // import * as THREE from "../../../three.js/src/Three.js"
 import * as THREE from './lib/three.module.js'
 import { OrbitControls } from './lib/OrbitControls.js'
+// window.THREE = THREE
 
 let that = null;
 export class Stage {
@@ -29,9 +30,9 @@ export class Stage {
     let vH = this.containerEle.clientHeight;
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
-      alpha: false,
-      preserveDrawingBuffer: true,
-      failIfMajorPerformanceCaveat: true,
+      // alpha: false,
+      // preserveDrawingBuffer: true,
+      // failIfMajorPerformanceCaveat: true,
     });
     this.renderer.setClearColor(0x000000, 0.0);
     this.renderer.autoClear = true;
@@ -100,7 +101,7 @@ export class Stage {
     that.fuArr.forEach(fun => {
       fun()
     });
-    that.control.update()
+    that.control && that.control.update()
     requestAnimationFrame(that._loop)
   }
 }

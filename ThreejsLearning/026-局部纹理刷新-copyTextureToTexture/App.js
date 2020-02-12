@@ -1,5 +1,5 @@
-import * as THREE from './lib/three.module.js'
-import { Stage } from './Stage.js'
+import * as THREE from './lib/three.module.js.js'
+import { Stage } from './Stage.js.js'
 
 window.THREE = THREE
 
@@ -25,8 +25,8 @@ class App {
     const texture = loader.load('00.jpg');
     this.srcTexturen = texture
     // 控制透明
-    // texture.minFilter = THREE.LinearFilter;
-    // texture.generateMipmaps = false;
+    texture.minFilter = THREE.LinearFilter;
+    texture.generateMipmaps = false;
     const material = new THREE.MeshBasicMaterial({ map: texture });
     let geometry = new THREE.BoxGeometry(10, 10, 10)
     let cube = new THREE.Mesh(geometry, material);
