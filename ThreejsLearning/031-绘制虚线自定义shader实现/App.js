@@ -13,8 +13,6 @@ class App {
     this.stage.run()
   }
 
-
-
   addLine() {
     var lineGeometry = new THREE.Geometry();//生成几何体
     lineGeometry.vertices.push(new THREE.Vector3(0, 0, 25));//线段的两个顶点
