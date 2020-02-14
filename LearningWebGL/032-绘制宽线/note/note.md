@@ -1,3 +1,11 @@
+[参考教程](https://mattdesl.svbtle.com/drawing-lines-is-hard)
+[参考代码](https://github.com/spite/THREE.MeshLine)
+
+### 032-绘制宽线
+<img src="00.png">
+
+Line.js
+```js
 import * as THREE from './lib/three.module.js'
 
 THREE.ShaderChunk['meshline_vert'] = [
@@ -531,7 +539,46 @@ export class LineMaterial extends THREE.ShaderMaterial {
 
   }
 }
+```
 
+App.js
+```js
+class App {
+	...
+	addMyLine() {
+	    var lineGeo = new Float32Array(600);
+	    for (var j = 0; j < 200 * 3; j += 3) {
+	      lineGeo[j] = -30 + .1 * j;
+	      lineGeo[j + 1] = 5 * Math.sin(.01 * j);
+	      lineGeo[j + 2] = 0;
+	    }
 
+	    var g = new Line();
+	    g.setGeometry(lineGeo);
 
-
+	    var material = new LineMaterial({
+	      useMap: false,
+	      color: new THREE.Color(colors[0]),
+	      opacity: 1,
+	      resolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
+	      sizeAttenuation: !false,
+	      lineWidth: 2,
+	      near: this.stage.camera.near,
+	      far: this.stage.camera.far
+	    });
+	    var mesh = new THREE.Mesh(g.geometry, material);
+	    mesh.name = "line"
+	    this.stage.camera.position.set(0, 0, 100);
+	    this.stage.scene.add(mesh);
+	    let t = 0
+	    this.stage.onUpdate(() => {
+	      t++
+	      let lineWidth = Math.sin(t * 0.05) + 2
+	      mesh.material.uniforms.lineWidth.value = lineWidth
+	      // mesh.rotation.x += 0.005
+	    })
+	  }
+	...
+}
+```
+<全文结束>

@@ -49,26 +49,35 @@ class App {
   }
 
   addMyLine() {
-    var lineGeo = new Float32Array(600);
-    for (var j = 0; j < 200 * 3; j += 3) {
-      lineGeo[j] = -30 + .1 * j;
-      lineGeo[j + 1] = 5 * Math.sin(.01 * j);
-      lineGeo[j + 2] = 0;
-    }
+    // var lineGeo = new Float32Array(600);
+    // for (var j = 0; j < 200 * 3; j += 3) {
+    //   lineGeo[j] = -30 + .1 * j;
+    //   lineGeo[j + 1] = 5 * Math.sin(.01 * j);
+    //   lineGeo[j + 2] = 0;
+    // }
+
+    var lineGeo = new Float32Array(9);
+    lineGeo[0] = 0
+    lineGeo[1] = 0
+    lineGeo[2] = 0
+
+    lineGeo[3] = 10
+    lineGeo[4] = 10
+    lineGeo[5] = 0
+
+    lineGeo[6] = 20
+    lineGeo[7] = 20
+    lineGeo[8] = 0
 
     var g = new Line();
     g.setGeometry(lineGeo);
 
     var material = new LineMaterial({
-      useMap: false,
       color: new THREE.Color(colors[0]),
-      opacity: 1,
       resolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
-      sizeAttenuation: !false,
       lineWidth: 2,
-      near: this.stage.camera.near,
-      far: this.stage.camera.far
     });
+
     var mesh = new THREE.Mesh(g.geometry, material);
     mesh.name = "line"
     this.stage.camera.position.set(0, 0, 100);
@@ -76,9 +85,8 @@ class App {
     let t = 0
     this.stage.onUpdate(() => {
       t++
-      let lineWidth = Math.sin(t * 0.05) + 2
+      let lineWidth = Math.sin(t * 0.05) + 3
       mesh.material.uniforms.lineWidth.value = lineWidth
-      // mesh.rotation.x += 0.005
     })
   }
 }
