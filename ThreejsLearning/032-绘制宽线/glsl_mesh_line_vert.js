@@ -39,7 +39,8 @@ void main(){
     dir=normalize(dir1+dir2);
   }
   
-  vec2 offset=vec2(-dir.y,dir.x)*lineWidth*side;
+  vec2 offset=vec2(-dir.y,dir.x)*side*lineWidth;
   finalPosition.xy+=offset.xy;
+  finalPosition.z=0.;
   gl_Position=finalPosition;
 }`
