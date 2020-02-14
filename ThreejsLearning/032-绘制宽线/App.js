@@ -49,25 +49,25 @@ class App {
   }
 
   addMyLine() {
-    // var lineGeo = new Float32Array(600);
-    // for (var j = 0; j < 200 * 3; j += 3) {
-    //   lineGeo[j] = -30 + .1 * j;
-    //   lineGeo[j + 1] = 5 * Math.sin(.01 * j);
-    //   lineGeo[j + 2] = 0;
-    // }
+    var lineGeo = new Float32Array(600);
+    for (var j = 0; j < 200 * 3; j += 3) {
+      lineGeo[j] = -30 + .1 * j;
+      lineGeo[j + 1] = 5 * Math.sin(.01 * j);
+      lineGeo[j + 2] = 0;
+    }
 
-    var lineGeo = new Float32Array(9);
-    lineGeo[0] = 0
-    lineGeo[1] = 0
-    lineGeo[2] = 0
+    // var lineGeo = new Float32Array(9);
+    // lineGeo[0] = 0
+    // lineGeo[1] = 0
+    // lineGeo[2] = 0
 
-    lineGeo[3] = 10
-    lineGeo[4] = 10
-    lineGeo[5] = 0
+    // lineGeo[3] = 10
+    // lineGeo[4] = 10
+    // lineGeo[5] = 0
 
-    lineGeo[6] = 20
-    lineGeo[7] = 20
-    lineGeo[8] = 0
+    // lineGeo[6] = 20
+    // lineGeo[7] = 20
+    // lineGeo[8] = 0
 
     var g = new Line();
     g.setGeometry(lineGeo);
