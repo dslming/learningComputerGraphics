@@ -12,6 +12,7 @@ export class Stage {
     this.container = container;
     this.initFlag = false;
     that = this;
+
     // 场景
     this.scene = new THREE.Scene();
     this.scene.name = "moumade";

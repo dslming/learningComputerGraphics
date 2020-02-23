@@ -3,6 +3,7 @@
 
 ### 获取运行时Three.js Shader源码
 
+#### 1、方法一-原生提供的方法打印
 Three.js使用棘手的字符串连接系统根据场景中的数据（例如当前的灯光数量）构建其着色器。
 
 在后台，至少从r100开始，Three.js 使用一个称为的函数构建着色器initMaterial，该函数仅在渲染时发生（如果材质是新的或needsUpdate已设置）。
@@ -37,4 +38,25 @@ console.log(
 );
 ```
 
+
+#### 2、方法二-利用浏览器插件
+[github地址](https://github.com/spite/ShaderEditorExtension)
+[谷歌商店地址](https://chrome.google.com/webstore/detail/shader-editor/ggeaidddejpbakgafapihjbgdlbbbpob)
+
+利用shader-editor插件:
+```js
+class ThreeLiveRawShaderEditor {
+
+  constructor(renderer, camera, scene) {
+    this.renderer = renderer;
+    this.camera = camera;
+    this.scene = scene;
+  }
+
+  compile() {
+    this.renderer.compile(this.scene, this.camera);
+  }
+}
+var TLRSE= new ThreeLiveRawShaderEditor(renderer, camera, scene);
+```
 <全文结束>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+      .circle {
+        stroke: red;
+        stroke-width: 4;
+        fill: none;
+        opacity: .5;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div class="btn" id="a">Unroll</div>
+    <div class="btn" id="b">Rollup</div>
+
+    <script>
+      const pathFunction = d3.line()
+        .x(d => { return d.x; })
+        .y(d => { return d.y; })
+
+      class DrawLineCircle {
+        constructor() {
+          this.circle = null
+          this.circleStates = []
+          this.numberOfPoints = 0
+          this.unRoll = this.unRoll.bind(this, this.unRoll)
+          this.rollUp = this.rollUp.bind(this, this.rollUp)
+          document.querySelector("#a").onclick = this.unRoll
+          document.querySelector("#b").onclick = this.rollUp
+        }
+
+        drawSvg(data) {
+          // The SVG Container
+          var svgContainer = d3.select("body").append("svg")
+            .attr("width", 400)
+            .attr("height", 400)
+
+          // The Circle SVG Path we draw
+          this.circle = svgContainer.append("g")
+            .append("path")
+            .data(data)
+            .attr("d", pathFunction)
+            .attr("class", "circle");
+        }
+
+        drawCircle() {
+          const numberOfPoints = 5;
+          const totalPoints = numberOfPoints;
+          // 圆的半径
+          const radius = 50
+          // 圆的周长
+          const lineLength = Number.parseInt(2 * radius * Math.PI);
+          // 每段线长度
+          const lineDivisionLength = Number.parseInt(lineLength / totalPoints);
+          // 动画持续时间
+          const dur = 1000 / totalPoints;
+          // 间距
+          const margin = 0
+          let theats = []
+          // 圆的点数据
+          const circlePointData = new Array(numberOfPoints).fill(0).map((d, j) => {
+            const theat = 2 * j * Math.PI / (numberOfPoints - 1)
+            let x = radius + lineDivisionLength + radius * Math.sin(theat);
+            let y = radius - radius * Math.cos(theat);
+            let theatTemp = theat / Math.PI * 180
+            theats.push(theatTemp)
+            return { x, y };
+          })
+
+          console.error({
+            lineLength,
+            lineDivisionLength,
+            totalPoints,
+            theats,
+            circleStates: this.circleStates
+          });
+
+          this.circleStates.push(circlePointData)
+          this.drawSvg(this.circleStates)
+        }
+
+        drawCircleAndLine() {
+          const numberOfPoints = 4;
+          const totalPoints = numberOfPoints;
+          this.numberOfPoints = numberOfPoints
+          // 圆的半径
+          const radius = 50
+          // 圆的周长
+          const lineLength = Number.parseInt(2 * radius * Math.PI);
+          // 线的段数
+          const lineDivision = Number.parseInt(lineLength / totalPoints);
+          // 动画持续时间
+          const dur = 1000 / totalPoints;
+
+          // 每次循环产生一组动作点数据坐标
+          for (let i = 0; i < totalPoints; i++) {
+            // circle portion
+            let circleState = new Array(numberOfPoints).fill(0).map((d, j) => {
+              let x = radius + lineDivision * i + radius * Math.sin(2 * j * Math.PI / (numberOfPoints - 1));
+              let y = radius - radius * Math.cos(2 * j * Math.PI / (numberOfPoints - 1));
+              return { x, y };
+            })
+            circleState.splice(numberOfPoints - i);
+
+            // line portion
+            var lineState = new Array(numberOfPoints).fill(0).map((d, j) => {
+              var x = radius + lineDivision * j;
+              var y = 0;
+              return { x, y };
+            })
+            lineState.splice(i);
+            //together
+            var individualState = lineState.concat(circleState);
+            this.circleStates.push(individualState);
+          }
+          this.drawSvg([this.circleStates[0]])
+
+        }
+
+        rollUp() {
+          if (!this.circle) return
+          const dur = 1000 / this.numberOfPoints
+
+          for (let i = 0; i < this.numberOfPoints; i++) {
+            this.circle.data([this.circleStates[this.numberOfPoints - 1 - i]])
+              .transition()
+              .delay(dur * i)
+              .duration(dur)
+              .attr('d', pathFunction)
+          }
+        }
+
+        unRoll() {
+          if (!this.circle) return
+          const dur = 1000 / this.numberOfPoints
+
+          for (let i = 0; i < this.numberOfPoints; i++) {
+            this.circle.data([this.circleStates[i]])
+              .transition()
+              .delay(dur * i)
+              .duration(dur)
+              .attr('d', pathFunction)
+          }
+        }
+
+      }
+      const lm = new DrawLineCircle()
+      window.lm = lm
+      lm.drawCircleAndLine()
+      // lm.drawCircle()
+    </script>
+  </body>
+
+</html>

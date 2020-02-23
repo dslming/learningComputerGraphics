@@ -1,4 +1,5 @@
 ### 将原生的webgl编译过程在three.js中找到对应的位置.
+Threejs将shader代码分为ShaderLib和ShaderChunk两部分,ShaderLib通过组合ShaderChunk的代码来构建vertexShader和fragmentShader
 
 #### 1、WebGLShader.js
 > 文件位置: src/renderers/webgl/
