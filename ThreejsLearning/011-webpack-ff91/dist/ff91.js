@@ -1992,54 +1992,56 @@ define("shader/skybox_frag.glsl", ["require", "exports"], function (require, exp
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = "\n#define DARK_BLUE vec3(0.063, 0.075, 0.094)\n// 6\u4E2A\u9762\u7684\u8D34\u56FE\u7EB9\u7406\nuniform samplerCube tCube;\n// tFlip = -1\nuniform float tFlip;\nuniform vec3 color;\n\nvarying vec3 vWorldPosition;\n\nvoid main() {\n\t// float multiColor = DARK_BLUE * light;\n\tgl_FragColor = textureCube( tCube, vec3( tFlip * vWorldPosition.x, vWorldPosition.yz ) );\n\tgl_FragColor.rgb *= color;\n}\n";
 });
-define("Skybox", ["require", "exports"], function (require, exports) {
+define("Skybox", ["require", "exports", "tslib", "shader/skybox_vert.glsl", "shader/skybox_frag.glsl"], function (require, exports, tslib_6, skybox_vert_glsl_1, skybox_frag_glsl_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    skybox_vert_glsl_1 = tslib_6.__importDefault(skybox_vert_glsl_1);
+    skybox_frag_glsl_1 = tslib_6.__importDefault(skybox_frag_glsl_1);
     var THREE = window.THREE;
     var TweenLite = window.TweenLite;
     var Skybox = /** @class */ (function () {
         function Skybox(_scene, _color) {
             var boxGeom = new THREE.BoxBufferGeometry(1, 1, 1);
-            // this.boxMat = new THREE.ShaderMaterial({
-            //   uniforms: {
-            //     tCube: { value: null },
-            //     tFlip: { value: -1 },
-            //     color: { value: _color }
-            //   },
-            //   vertexShader: shaderVert,
-            //   fragmentShader: shaderFrag,
-            //   side: THREE.BackSide,
-            //   depthTest: true,
-            //   depthWrite: false,
-            //   fog: false
-            // });
-            this.boxMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            this.boxMat = new THREE.ShaderMaterial({
+                uniforms: {
+                    tCube: { value: null },
+                    tFlip: { value: -1 },
+                    color: { value: _color }
+                },
+                vertexShader: skybox_vert_glsl_1.default,
+                fragmentShader: skybox_frag_glsl_1.default,
+                side: THREE.BackSide,
+                depthTest: true,
+                depthWrite: false,
+                fog: false
+            });
+            // this.boxMat = new THREE.MeshStandardMaterial({ color: 0xffffff })
             var boxMesh = new THREE.Mesh(boxGeom, this.boxMat);
             boxMesh.name = 'boxMesh';
             // boxGeom.removeAttribute('normal');
             // boxGeom.removeAttribute('uv');
             _scene.add(boxMesh);
-            // boxMesh.onBeforeRender = function (renderer: any, scene: any, camera: { matrixWorld: any; }) {
-            //   this.matrixWorld.copyPosition(camera.matrixWorld);
-            // };
+            boxMesh.onBeforeRender = function (renderer, scene, camera) {
+                this.matrixWorld.copyPosition(camera.matrixWorld);
+            };
         }
         Skybox.prototype.updateLight = function (_newVal) {
-            // this.boxMat.uniforms.light.value = _newVal;
+            this.boxMat.uniforms.light.value = _newVal;
         };
         ;
         Skybox.prototype.setCubeTexture = function (_cubeTex) {
-            this.boxMat.envMap = _cubeTex;
-            // this.boxMat.uniforms.tCube.value = _cubeTex;
+            // this.boxMat.envMap = _cubeTex
+            this.boxMat.uniforms.tCube.value = _cubeTex;
         };
         return Skybox;
     }());
     exports.default = Skybox;
 });
-define("ViewTour", ["require", "exports", "tslib", "CarBody", "Skybox", "Props"], function (require, exports, tslib_6, CarBody_1, Skybox_1, Props_4) {
+define("ViewTour", ["require", "exports", "tslib", "CarBody", "Skybox", "Props"], function (require, exports, tslib_7, CarBody_1, Skybox_1, Props_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    CarBody_1 = tslib_6.__importDefault(CarBody_1);
-    Skybox_1 = tslib_6.__importDefault(Skybox_1);
+    CarBody_1 = tslib_7.__importDefault(CarBody_1);
+    Skybox_1 = tslib_7.__importDefault(Skybox_1);
     var THREE = window.THREE;
     var TweenLite = window.TweenLite;
     // var Card_1 = require('./30');
@@ -2260,12 +2262,12 @@ define("ViewTour", ["require", "exports", "tslib", "CarBody", "Skybox", "Props"]
     }());
     exports.default = ViewTour;
 });
-define("ff91", ["require", "exports", "tslib", "Camera", "ViewTour", "AssetLoader"], function (require, exports, tslib_7, Camera_1, ViewTour_1, AssetLoader_1) {
+define("ff91", ["require", "exports", "tslib", "Camera", "ViewTour", "AssetLoader"], function (require, exports, tslib_8, Camera_1, ViewTour_1, AssetLoader_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    Camera_1 = tslib_7.__importDefault(Camera_1);
-    ViewTour_1 = tslib_7.__importDefault(ViewTour_1);
-    AssetLoader_1 = tslib_7.__importDefault(AssetLoader_1);
+    Camera_1 = tslib_8.__importDefault(Camera_1);
+    ViewTour_1 = tslib_8.__importDefault(ViewTour_1);
+    AssetLoader_1 = tslib_8.__importDefault(AssetLoader_1);
     var THREE = window.THREE;
     var Hammer = window.Hammer;
     var Control = /** @class */ (function () {
@@ -2324,7 +2326,7 @@ define("ff91", ["require", "exports", "tslib", "Camera", "ViewTour", "AssetLoade
                 { name: "led", type: "texture", ext: "png" },
             ];
             this.assetLoader = new AssetLoader_1.default("./static/", manifesto, function () {
-                console.error('load over...');
+                // console.error('load over...')
                 _this.viewTour = new ViewTour_1.default(_this.sceneWGL, _this.rendererWGL, _this.cam, _this.vp);
                 _this.viewTour.initMeshes(_this.assetLoader.cargo);
                 _this.disableRender = true;
