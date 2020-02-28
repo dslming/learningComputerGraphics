@@ -1,6 +1,6 @@
 // import * as THREE from "../../../three.js/src/Three.js"
-import * as THREE from './lib/three.module.js.js'
-import { OrbitControls } from './lib/OrbitControls.js.js'
+import * as THREE from './lib/three.module.js'
+import { OrbitControls } from './lib/OrbitControls.js'
 
 let that = null;
 export class Stage {

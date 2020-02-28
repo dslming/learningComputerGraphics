@@ -1,5 +1,5 @@
-import * as THREE from './lib/three.module.js.js'
-import { Stage } from './Stage.js.js'
+import * as THREE from './lib/three.module.js'
+import { Stage } from './Stage.js'
 
 window.THREE = THREE
 
