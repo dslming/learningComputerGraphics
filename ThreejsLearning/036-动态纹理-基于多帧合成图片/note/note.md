@@ -3,7 +3,7 @@
 
 [文字教程](https://medium.com/@soffritti.pierfrancesco/animations-with-alpha-textures-in-three-js-52a33654e137)
 
-### 动态纹理-基于多帧合成图片
+### 动态纹理-基于多帧合成图片(Animated Textures)
 <img src="../run.png">
 
 #### 1、定义动态纹理
