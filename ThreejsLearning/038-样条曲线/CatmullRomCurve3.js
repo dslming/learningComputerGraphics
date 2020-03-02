@@ -30,17 +30,6 @@ class CubicPoly {
     this.init(x1, x2, tension * (x2 - x0), tension * (x3 - x1));
   }
 
-  // 初始化非均匀CatmullRom
-  initNonuniformCatmullRom(x0, x1, x2, x3, dt0, dt1, dt2) {
-    // compute tangents when parameterized in [t1,t2]
-    var t1 = (x1 - x0) / dt0 - (x2 - x0) / (dt0 + dt1) + (x2 - x1) / dt1;
-    var t2 = (x2 - x1) / dt1 - (x3 - x1) / (dt1 + dt2) + (x3 - x2) / dt2;
-    // rescale tangents for parametrization in [0,1]
-    t1 *= dt1;
-    t2 *= dt1;
-    this.init(x1, x2, t1, t2);
-  }
-
   calc(t) {
     var t2 = t * t;
     var t3 = t2 * t;
@@ -55,31 +44,32 @@ var pz = new CubicPoly()
 
 export default class CatmullRomCurve3 {
   constructor(points, closed, curveType, tension) {
-    this.type = 'CatmullRomCurve3';
     this.points = points || [];
-    this.closed = closed || false;
-    this.curveType = curveType || 'centripetal';
+    this.curveType = 'catmullrom';
     this.tension = tension || 0.5;
+    this.vicePoints = []
   }
 
-  _getPoint(t, optionalTarget) {
-    var point = optionalTarget || new Vector3();
+  /**
+   *
+   * @param {*} t 差值进度, 0~1
+   */
+  _getPoint(t) {
+    // 所有的控制点
     var points = this.points;
+    // 控制点的数量
     var l = points.length;
-
-    var p = (l - (this.closed ? 0 : 1)) * t;
-    var intPoint = Math.floor(p);
+    // 计算当前的差值点, 0~l-1
+    var p = (l - 1) * t;
+    // 0~1
+    var intPoint = Number.parseInt(p);
+    // 0~1
     var weight = p - intPoint;
+    // console.error(`p:${p}, intPoint:${intPoint}, weight:${weight}`);
 
-    if (this.closed) {
-      intPoint += intPoint > 0 ? 0 : (Math.floor(Math.abs(intPoint) / l) + 1) * l;
-    } else if (weight === 0 && intPoint === l - 1) {
-      intPoint = l - 2;
-      weight = 1;
-    }
-
-    var p0, p1, p2, p3; // 4 points
-    if (this.closed || intPoint > 0) {
+    // 4 points
+    var p0, p1, p2, p3;
+    if (intPoint > 0) {
       p0 = points[(intPoint - 1) % l];
     } else {
       // extrapolate first point
@@ -89,42 +79,37 @@ export default class CatmullRomCurve3 {
 
     p1 = points[intPoint % l];
     p2 = points[(intPoint + 1) % l];
-    if (this.closed || intPoint + 2 < l) {
+    if (intPoint + 2 < l) {
       p3 = points[(intPoint + 2) % l];
     } else {
       // extrapolate last point
       tmp.subVectors(points[l - 1], points[l - 2]).add(points[l - 1]);
       p3 = tmp;
     }
+    // console.error(`p0:${JSON.stringify(p0)}`);
+    // console.error(`p1:${JSON.stringify(p1)}`);
+    // console.error(`p2:${JSON.stringify(p2)}`);
+    // console.error(`p3:${JSON.stringify(p3)}`);
+    this.vicePoints.push(Object.assign({}, p0))
+    this.vicePoints.push(Object.assign({}, p1))
+    this.vicePoints.push(Object.assign({}, p2))
+    this.vicePoints.push(Object.assign({}, p3))
+    // console.error(t);
 
-    if (this.curveType === 'centripetal' || this.curveType === 'chordal') {
-      // init Centripetal / Chordal Catmull-Rom
-      var pow = this.curveType === 'chordal' ? 0.5 : 0.25;
-      var dt0 = Math.pow(p0.distanceToSquared(p1), pow);
-      var dt1 = Math.pow(p1.distanceToSquared(p2), pow);
-      var dt2 = Math.pow(p2.distanceToSquared(p3), pow);
 
-      // safety check for repeated points
-      if (dt1 < 1e-4) dt1 = 1.0;
-      if (dt0 < 1e-4) dt0 = dt1;
-      if (dt2 < 1e-4) dt2 = dt1;
-
-      px.initNonuniformCatmullRom(p0.x, p1.x, p2.x, p3.x, dt0, dt1, dt2);
-      py.initNonuniformCatmullRom(p0.y, p1.y, p2.y, p3.y, dt0, dt1, dt2);
-      pz.initNonuniformCatmullRom(p0.z, p1.z, p2.z, p3.z, dt0, dt1, dt2);
-
-    } else if (this.curveType === 'catmullrom') {
-      px.initCatmullRom(p0.x, p1.x, p2.x, p3.x, this.tension);
-      py.initCatmullRom(p0.y, p1.y, p2.y, p3.y, this.tension);
-      pz.initCatmullRom(p0.z, p1.z, p2.z, p3.z, this.tension);
-    }
-
+    px.initCatmullRom(p0.x, p1.x, p2.x, p3.x, this.tension);
+    py.initCatmullRom(p0.y, p1.y, p2.y, p3.y, this.tension);
+    var point = new Vector3();
     point.set(
       px.calc(weight),
       py.calc(weight),
-      pz.calc(weight)
+      0
     );
+    // console.error(point, weight);
     return point;
+  }
+  getVicePoints() {
+    return this.vicePoints
   }
 
   getPoints(divisions) {
@@ -133,6 +118,8 @@ export default class CatmullRomCurve3 {
     for (var d = 0; d <= divisions; d++) {
       points.push(this._getPoint(d / divisions));
     }
+    // console.error(points);
+
     return points;
   }
 }

@@ -39,9 +39,10 @@ export class Stage {
     this.renderer.setSize(vW, vH, false);
     this.containerEle.appendChild(this.renderer.domElement);
     this.camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000)
-    this.camera.position.set(0, 0, 40)
-    this.camera.lookAt(0, 0, 0)
+    this.camera.position.set(7, 0, 40)
+    // this.camera.lookAt(0, 0, 0)
     this.camera.name = "camera";
+    this.scene.add(this.camera);
     window.addEventListener("resize", this.handleResize);
     this.handleResize();
     this.initControls();

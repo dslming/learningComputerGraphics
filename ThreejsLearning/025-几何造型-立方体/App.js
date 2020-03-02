@@ -65,7 +65,6 @@ class App {
       mesh.rotation.set(0, 1.52, 0)
       this.stage.scene.add(mesh)
     })
-
   }
   // 增加一个立方体
   addBox(stage) {

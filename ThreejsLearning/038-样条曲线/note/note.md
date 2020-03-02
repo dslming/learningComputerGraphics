@@ -25,89 +25,39 @@
 ![alt](003.png)
 ![alt](004.png)
 
-#### 3、CatmullRom原理
+#### 3、 CatmullRom 要求参数1阶连续
 
-[参考资料1](https://blog.csdn.net/u012154588/article/details/98977717?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task)
-[参考资料2](https://wenku.baidu.com/view/bb7f8ff4910ef12d2bf9e70d.html)
+[截图出处](https://wenku.baidu.com/view/bb7f8ff4910ef12d2bf9e70d.html)
 
 ![alt](005.png)
 
-![alt](006.gif)
-经过4个点($P_0$,$P_1$,$P_2$,$P_3$)的曲线方程为:
-$$
-B(t) = c_0 + c_1 t + c_2 t^2 + c_3 t^3
-$$
+#### 4、 CatmullRom 公式原理
 
+[参考教程1](http://algorithmist.net/docs/catmullrom.pdf)
+[参考教程2](https://www.lucidarme.me/catmull-rom-splines/#)
 
-其切线方程为:
-$$
-C(t) = c_1 + 2 c_2 t + 3 c_3 t^2
-$$
+![alt](007.png)
+要绘制曲线$P_iP_{i+1}$,需要额外两个辅助点, $P_{i-1}$和$P_{i+2}$。
 
-满足如下条件:
+几乎所有的三次曲线构造都与 Hermite 曲线有些相似。考虑在两点之间拟合三次曲线的情况。除了通过两个点之外，还需要两个其他约束来定义曲线。假设在每个端点处指定了导数值，如下图所示:
+![alt](011.png)
 
-~~~math
-\begin{aligned}
-B(0) &= P_1, 故 c_0 = P_1 \\
+这种情况与 Hermite 曲线非常相似，只不过上面的曲线没有超出控制点。由于切线会影响曲线的形状，因此可以明确提供切线或从其他控制点推断出切线。
 
-C(0) &= \frac{P_2-P_1}{2}, 故c_1 = \frac{P_2-P_1}{2} \\
+考虑单个曲线$P(t)$的推导，该曲线对上面的点$P_0$和$P_1$进行插值。
 
-B(1) &= P_2, 故c_0+c_1+c_2+c_3 = P_2 \\
+假设如下所示指定了其他控制点$P_{-1}$和$P_2$。
+![alt](012.png)
 
-C(1) &= \frac{P_3-P1}{2}, 故 c_1+2c_2+3c_3 = \frac{P_3-P1}{2}
+$P(t)$是三次曲线，条件为t=0产生$P_0$，t=1产生$P_1$。
+辅助点$P_{-1}$和$P_2$用于通过隐式定义切线来调整曲线的形状:
+![alt](013.png)
 
-\end{aligned}
-~~~
+其中$α$在0到1之间。此定义使每个端点处的切线平行于相邻控制点之间的弦。曲线的一般方程为
+![alt](014.png)
 
-由上式可推出:
+可以从端点和切线规范提供的几何约束条件确定系数。该过程类似于Hermite插值的推导。
+![alt](015.png)
 
-~~~math
-\begin{aligned}
-
-c_0 &= P_1      \\
-c_1 &= \frac{P_2-P_1}{2}   \\
-c_2 &= \frac{2P_0-5P_1+4P_2-P_3}{2} \\
-c_3 &= \frac{-P_0+3P_1-3P_2+P_3}{2}
-
-\end{aligned}
-~~~
-
-那么样条的表达式:
-$$
-Q(t) = [(2 * P_1) + (-P_0 + P_2) * t + (2P_0 - 5P_1 + 4P_2 - P_3) * t^2 + (-P0 + 3P_1- 3P_2 + P_3) * t^3 ] * \frac{1}{2}
-$$
-
-矩阵形式:
-$$
-Q(t) = \frac{1}{2} *
-\left[
-  \begin{matrix}
-  1 & t & t^2 & t^3 \\
-  \end{matrix}
-\right]
-*
-\left[
-  \begin{matrix}
-  0 & 2 & 0 & 0  \\
-  -1 & 0 & 1 & 0  \\
-  2 & -5 & 4 & -1  \\
-  -1 & 3 & -3 & 1
-  \end{matrix}
-\right]
-*
-\left[
-  \begin{matrix}
-  P_0 \\
-  P_1 \\
-  P_2 \\
-  P_3 \\
-  \end{matrix}
-\right]
-$$
-
-这个公式$y=x+1$是
-
-$$
-\theta = x+1
-$$
-<全文结束>
+Since $P'(t)=3at2 +2bt+c$
+![alt](016.png)
