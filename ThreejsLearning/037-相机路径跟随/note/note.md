@@ -2,6 +2,5 @@
 
 [相机跟随例子](https://github.com/ZachSaucier/threejs-camera-spline-follower)
 
-
 ### 037-相机路径跟随(Camera following a path)
 
