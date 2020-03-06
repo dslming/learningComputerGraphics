@@ -16,3 +16,16 @@
 https://codepen.io/noelchan/pen/ExYLKPy
 https://www.clicktorelease.com/tmp/threejs/mblur/
 motion blur three.js
+
+微分几何
+计算几何
+[js库](https://github.com/yszhao91/xtorcga)
+[unity库]([https://link](https://github.com/Habrador/Computational-geometry))
+
+[使用数学解决C＃中Unity的问题](https://www.habrador.com/tutorials/math/)
+
+数学专业-几何部分:
+解析几何
+微分几何
+计算几何
+高等几何

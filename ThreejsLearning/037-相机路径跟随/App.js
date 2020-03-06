@@ -27,35 +27,28 @@ class App {
     }
     var path = new THREE.CatmullRomCurve3(points);
     var geometry = new THREE.TubeGeometry(path, 200, 1, 20, false);
-    var material = new THREE.MeshLambertMaterial({ color: 0xff00ff, side: THREE.BackSide, wireframe: true });
+    var material = new THREE.MeshLambertMaterial({ color: 0xff00ff, side: THREE.BackSide, wireframe: false });
     var curveObject = new THREE.Mesh(geometry, material);
     this.stage.scene.add(curveObject)
     this.curve = curveObject
 
     // light
-    var light = new THREE.PointLight(0xffffff, 1, 50);
+    var light = new THREE.PointLight(0xffffff, 1, 80);
     this.stage.scene.add(light);
-    var splineCamera = new THREE.PerspectiveCamera(85, 1, 0.1, 1000)
+    var splineCamera = new THREE.PerspectiveCamera(85, 1, 5, 1000)
     this.stage.scene.add(splineCamera);
     var cameraHelper = new THREE.CameraHelper(splineCamera);
     this.stage.scene.add(cameraHelper);
 
 
     this.stage.onUpdate(() => {
-      // splineCamera.lookAt(new THREE.Vector3(0, 0, -10))
-      // splineCamera.position.set(0, 0, 0)
-      // splineCamera.up.set(0, 1, 0)
-      // splineCamera.rotation.set
-      // splineCamera.rotation.setFromRotationMatrix(splineCamera.matrix, splineCamera.rotation.order);
-
       this.renderFollowCamera(splineCamera, light, cameraHelper)
-
       // this.ttt(splineCamera, light)
       // this.stage.renderer.render(this.stage.scene, splineCamera);
     })
   }
 
-  ttt(splineCamera) {
+  ttt(splineCamera, light) {
     var time = Date.now() * 0.5;
     var looptime = 20 * 1000;
     var t = (time % looptime) / looptime;
@@ -70,24 +63,22 @@ class App {
     light.position.set(p2.x, p2.y, p2.z);
   }
 
-  // Animate the camera along the spline
   renderFollowCamera(splineCamera, light, cameraHelper) {
-    // splineCamera = this.stage.camera
-    // animate camera along spline
     const tubeGeometry = this.curve.geometry
     const params = {
-      scale: 1
+      scale: 1,
+      lookAhead: false
     }
-    var time = Date.now();
+    var time = Date.now() * 0.5;
     var looptime = 20 * 1000;
     var t = (time % looptime) / looptime;
 
     var pos = tubeGeometry.parameters.path.getPointAt(t);
+    var p2 = tubeGeometry.parameters.path.getPointAt((t + 0.02) % 1);
     pos.multiplyScalar(params.scale);
 
-    // interpolation
-
     var segments = tubeGeometry.tangents.length;
+
     var pickt = t * segments;
     var pick = Math.floor(pickt);
     var pickNext = (pick + 1) % segments;
@@ -96,21 +87,16 @@ class App {
     binormal.multiplyScalar(pickt - pick).add(tubeGeometry.binormals[pick]);
 
     var dir = tubeGeometry.parameters.path.getTangentAt(t);
-    var offset = 0;
-
     normal.copy(binormal).cross(dir);
-
-    // we move on a offset on its binormal
-
-    pos.add(normal.clone().multiplyScalar(offset));
-
     splineCamera.position.copy(pos);
-    light.position.copy(pos);
-    // using arclength for stablization in look ahead
+    light.position.copy(p2);
 
+    // using arclength for stablization in look ahead
+    // 使用弧长来稳定向前看
     var lookAt = tubeGeometry.parameters.path.getPointAt((t + 30 / tubeGeometry.parameters.path.getLength()) % 1).multiplyScalar(params.scale);
 
     // camera orientation 2 - up orientation via normal
+    // 相机方向2-通过法线向上
 
     if (!params.lookAhead) lookAt.copy(pos).add(dir);
     splineCamera.matrix.lookAt(splineCamera.position, lookAt, normal);
