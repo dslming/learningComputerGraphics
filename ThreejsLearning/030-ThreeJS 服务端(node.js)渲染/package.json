@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "pngjs": "^3.4.0",
+    "three": "^0.112.1",
+    "three-software-renderer": "https://github.com/lanceschi/three-software-renderer.git#feature/projector-update"
+  },
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "gm": "^1.23.1",
+    "three-mtl-loader": "^1.0.2",
+    "three-obj-loader": "^1.1.3"
+  }
+}
