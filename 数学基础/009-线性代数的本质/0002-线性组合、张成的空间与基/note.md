@@ -16,3 +16,4 @@ $\vec{w} = a\vec{u}+b\vec{v}$
 
 基:
 ![alt](020.png)
+<全文结束>
