@@ -28,7 +28,7 @@ a × b = |a| |b| sin(θ) n
 ```
 
 也可以这样计算:
-<img src="06.8">
+<img src="06.gif">
 
 ```js
 cx = aybz − azby
