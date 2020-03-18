@@ -7,6 +7,8 @@ export default class Camera {
   constructor(stage) {
     const clock = new THREE.Clock();
     this.ctl = new CameraControls(stage.camera, stage.renderer.domElement);
+    // 阻尼
+    this.ctl.dampingFactor = 0.1
     stage.onUpdate(() => {
       const delta = clock.getDelta();
       const hasControlsUpdated = this.ctl.update(delta);
