@@ -2,15 +2,15 @@ import * as THREE from './lib/three.module.js'
 import HotPoint from './HotPoint.js'
 
 const camTip1 = (camCtl) => {
-  camCtl.setPosition(15, 15, 15, true)
+  camCtl.setPosition(25, 25, 25, true)
 }
 
 const camTip2 = (camCtl) => {
-  camCtl.setPosition(-18, 0, 15, true)
+  camCtl.setPosition(-18, 0, 35, true)
 }
 
 const camTip3 = (camCtl) => {
-  camCtl.setPosition(0, 0, 20, true)
+  camCtl.setPosition(0, 0, 35, true)
 }
 
 const camObj = {
@@ -43,12 +43,12 @@ export default class Box {
     this.camCtl = camCtl
     camCtl.setTarget(box.position.x, box.position.y, box.position.z, true)
 
-    camCtl.dolly(40, true)
+    camCtl.dolly(10, true)
     camCtl.rotate(0, -25 * THREE.Math.DEG2RAD, true)
     camCtl.rotate(25 * THREE.Math.DEG2RAD, 0, true)
     setTimeout(() => {
-      hotPoint1.click = true
-      camTip1(camCtl)
+      hotPoint3.click = true
+      camTip3(camCtl)
     }, 500);
   }
 
@@ -94,8 +94,6 @@ export default class Box {
     const objs = that.hotPoints.map(item => { return item.sprite })
 
     function onMouseClick(event) {
-      console.error(event);
-
       let clientX = 0
       let clientY = 0
 
