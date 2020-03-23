@@ -9,6 +9,10 @@ export default class HotPoint {
     this.name = index
   }
 
+  /**
+   * 使用canvas绘制序号的纹理
+   * @param {*} index 显示的序号
+   */
   _getTextureByNumber(index) {
     const width = 64
     const height = 64
@@ -53,6 +57,11 @@ export default class HotPoint {
     return numberTexture
   }
 
+  /**
+   * 制作一个精灵
+   * @param {*} index 显示的序号
+   * @param {*} position
+   */
   _getMeshSprite(index, position) {
     const spriteMaterial = new THREE.SpriteMaterial({
       map: this._getTextureByNumber(index),
