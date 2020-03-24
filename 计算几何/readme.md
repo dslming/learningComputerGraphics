@@ -5,4 +5,6 @@
 
 笔记和代码都会放在github上,[地址](https://github.com/dslming/learningComputerGraphics/tree/master/%E8%AE%A1%E7%AE%97%E5%87%A0%E4%BD%95/)。
 
+一些非常有用、值得常逛的链接:
+[Qhull](http://www.qhull.org/)
 <全文结束>
