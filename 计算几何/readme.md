@@ -8,4 +8,8 @@
 一些非常有用、值得常逛的链接:
 [Qhull](http://www.qhull.org/)
 [授课老师资料](https://dsa.cs.tsinghua.edu.cn/~deng/index.htm)
+
+凸包算法
+- Jarvis’s Algorithm or Wrapping
+-
 <全文结束>
