@@ -8,8 +8,10 @@
 一些非常有用、值得常逛的链接:
 [Qhull](http://www.qhull.org/)
 [授课老师资料](https://dsa.cs.tsinghua.edu.cn/~deng/index.htm)
+[知乎计算几何专栏](https://zhuanlan.zhihu.com/p/33355636)
 
 凸包算法
 - Jarvis’s Algorithm or Wrapping
--
+- 算法的正确性(结构归纳法)
+- 二路归并算法
 <全文结束>

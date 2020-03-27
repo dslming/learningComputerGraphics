@@ -6,7 +6,7 @@
  * return 0:共线; 1:顺时针; 2:逆时针
  */
 function orientation(p, q, r) {
-  console.error(p, q, r);
+  // console.error(p, q, r);
 
   let v = (
     (q.y - p.y) * (r.x - q.x) -
@@ -52,7 +52,7 @@ export function convexHull(points) {
         q = i;
       }
     }
-    console.error(123, points[q]);
+    // console.error(123, points[q]);
 
     // 现在q是相对于p的最逆时针方向
     p = q;
