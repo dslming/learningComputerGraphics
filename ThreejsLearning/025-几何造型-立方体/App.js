@@ -7,9 +7,10 @@ import { fragmentShader } from './glsl.fragmentShader.js'
 window.THREE = THREE
 class App {
   constructor() {
+    window.lm = this
     this.stage = new Stage("#app")
-    // this.addBox(stage)
-    this.addMyBox(this.stage)
+    this.addBox(this.stage)
+    // this.addMyBox(this.stage)
     this.stage.run()
 
     let pos = [
@@ -71,7 +72,7 @@ class App {
     var material = new THREE.MeshBasicMaterial({
       color: 0x0000ff,
     });
-    let geometry = new THREE.BoxGeometry(2, 2, 2)
+    let geometry = new THREE.BoxGeometry(20, 20, 20)
     let cube = new THREE.Mesh(geometry, material);
     // cube.material.wireframe = true
     cube.name = "cube"
