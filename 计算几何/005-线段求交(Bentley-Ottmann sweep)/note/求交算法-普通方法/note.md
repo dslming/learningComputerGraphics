@@ -17,5 +17,4 @@
 
 ![alt](003.png)
 
-#### 3、Bentley-Ottmann sweep
 <全文结束>

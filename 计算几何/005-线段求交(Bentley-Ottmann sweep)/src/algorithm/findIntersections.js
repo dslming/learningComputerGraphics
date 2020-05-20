@@ -8,24 +8,14 @@ const Tree = window.AVLTree
 */
 export function findIntersections(segments) {
     var sweepline = new Sweepline('before');
-    try {
-        var queue = new Tree(utils.comparePoints, true),
-            status = new Tree(utils.compareSegments.bind(sweepline), true),
-            output = new Tree(utils.comparePoints, true);
-    }
-    catch (uwu) {
-        if (!(/is not a constructor/i.test(uwu.message))) {
-            throw uwu
-        }
-        var queue = new Tree.default(utils.comparePoints, true),
-            status = new Tree.default(utils.compareSegments.bind(sweepline), true),
-            output = new Tree.default(utils.comparePoints, true);
-    }
+    var queue = new Tree(utils.comparePoints, true),
+        status = new Tree(utils.compareSegments.bind(sweepline), true),
+        output = new Tree(utils.comparePoints, true);
 
     segments.forEach(function (segment) {
         segment.sort(utils.comparePoints);
-        var begin = new Point(segment[0], 'begin'),
-            end = new Point(segment[1], 'end');
+        var begin = new Point(segment[0], 'begin')
+        var end = new Point(segment[1], 'end');
 
         queue.insert(begin, begin);
         begin = queue.find(begin).key;
