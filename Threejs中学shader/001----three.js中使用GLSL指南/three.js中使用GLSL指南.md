@@ -136,3 +136,8 @@ https://github.com/mrdoob/three.js/tree/master/src/renderers/shaders
 - Object3D.matrix是相对于Object3D.parent来说，要在世界空间中获取其所在的变换矩阵，必须访问Object3D.matrixworld，
 那我们来思考一下 Object3D.matrixworld是如何计算的呢，在前面我提到过物体的世界变换矩阵，若这个Object3D没有父级，则它将和模型矩阵相同，其实就是此时他是个4X4的单位矩阵乘上物体的模型矩阵。
 - 简单来说，THREE中的物体是有层级关系的，所以THREE中物体的 matrixworld是通过模型矩阵 （Object3D.matrix）与父亲的 Object3D.matrixworld递归相乘得到的，哈哈。
+
+
+#### glsl 内置变量
+gl_FragColor 片元的颜色
+gl_FragCoord 该片元的像素坐标，范围是viewport的宽高。
