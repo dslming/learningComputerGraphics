@@ -20,7 +20,7 @@
     "poisson-disk-sampling": "^1.0.6",
     "pretty-ms": "^5.1.0",
     "stats.js": "^0.17.0",
-    "three": "^0.112.1",
+    "three": "^0.125.0",
     "three-projected-material": "^1.1.0",
     "touches": "^1.2.2",
     "vue": "^2.6.10"
