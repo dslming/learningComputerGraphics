@@ -7280,10 +7280,10 @@ three-projected-material@^1.1.0:
   resolved "https://registry.npm.taobao.org/three-projected-material/download/three-projected-material-1.1.0.tgz#1f01b9dec0d99d987067effb6d42abf4635242d0"
   integrity sha1-HwG53sDZnZhwZ+/7bUKr9GNSQtA=
 
-three@^0.112.1:
-  version "0.112.1"
-  resolved "https://registry.npm.taobao.org/three/download/three-0.112.1.tgz#f8d8f4d0f8e5f753dac6260491b8209457fdc131"
-  integrity sha1-+Nj00Pjl91PaxiYEkbgglFf9wTE=
+three@^0.137.0:
+  version "0.137.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.137.0.tgz#0ebd6ba66637a332c31f234bcdd35aeec071a6e3"
+  integrity sha512-rzSDhia6cU35UCy6y+zEEws6vSgytfHqFMSaBvUcySgzwvDO6vETyswtSNi/+aVqJw8WLMwyT1mlQQ1T/dxxOA==
 
 through2@^2.0.0:
   version "2.0.5"
